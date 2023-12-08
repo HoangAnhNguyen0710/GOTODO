@@ -12,8 +12,8 @@ import { IUserModel, validateUser } from "../../models";
 import { createUser } from "../../services/auth/Auth";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../redux/user.reducer";
-import { Loading } from "../common";
 import { OutletContextProps } from "../../pages/Auth";
+import { Loading } from "../../components/common";
 
 const initialUser: Omit<IUserModel, "id"> = {
   email: "",

@@ -10,7 +10,7 @@ import { OutletContextProps } from "../../pages/Auth";
 import { login } from "../../services/auth/Auth";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../redux/user.reducer";
-import { Loading } from "../common";
+import { Loading } from "../../components/common";
 
 const Login = (): JSX.Element => {
   const [visible, setVisible] = useState(false);

@@ -1,4 +1,3 @@
-export { default as Header } from "./Header";
+export { default as Header } from "./layouts/Header";
+export { default as Footer } from "./layouts/Footer";
 export { default as Section } from "./Section";
-export { default as Login } from "./auth/Login";
-export { default as Signup } from "./auth/Signup";

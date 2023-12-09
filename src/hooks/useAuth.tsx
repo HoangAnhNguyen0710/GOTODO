@@ -1,11 +1,11 @@
 import React from "react";
-import { IUserModel } from "../models";
+import { User } from "../models";
 import { setCurrentUser } from "../redux/user.reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { getUserByEmail } from "../services/auth/Auth";
 
-export function useAuth(): IUserModel | null {
+export function useAuth(): User | null {
     const dispatch = useDispatch();
     const currentUser = useSelector((state: RootState) => state.user.user);
     

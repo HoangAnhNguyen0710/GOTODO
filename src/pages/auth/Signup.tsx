@@ -8,14 +8,14 @@ import {
   AiOutlineArrowLeft,
 } from "react-icons/ai";
 import { LuMapPin } from "react-icons/lu";
-import { IUserModel, validateUser } from "../../models";
+import { User, validateUser } from "../../models";
 import { createUser } from "../../services/auth/Auth";
 import { useDispatch } from "react-redux";
 import { setCurrentUser } from "../../redux/user.reducer";
 import { OutletContextProps } from "../../pages/Auth";
 import { Loading } from "../../components/common";
 
-const initialUser: Omit<IUserModel, "id"> = {
+const initialUser: Omit<User, "id"> = {
   email: "",
   fullname: "",
   nationality: "",
@@ -27,7 +27,7 @@ const initialUser: Omit<IUserModel, "id"> = {
 
 const Signup = (): JSX.Element => {
   const [newUserData, setNewUserData] = useState<
-    IUserModel | Omit<IUserModel, "id">
+    User | Omit<User, "id">
   >(initialUser);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");

@@ -14,9 +14,9 @@ export async function createUser(
     .createUserWithEmailAndPassword(user.email, password)
     .then(async (userCredential) => {
       localStorage.setItem("user", JSON.stringify(userCredential.user));
-      const newData = await firestore.collection("users").add(user);
+      const newData = await firestore.collection("Users").add(user);
       // const updateDocId = await firestore
-      //   .collection("users")
+      //   .collection("Users")
       //   .doc(newData.id)
       //   .update({ ...user, id: newData.id });
       return newData.get();
@@ -31,7 +31,7 @@ export async function createUser(
 export async function getUserByEmail(email: string | null | undefined): Promise<User | null> {
   if (email) {
     const user = await firestore
-      .collection("users")
+      .collection("Users")
       .where("email", "==", email)
       .get();
       if(user.docs.map((item) => ({ ...item.data() }))[0]) {
@@ -43,7 +43,7 @@ export async function getUserByEmail(email: string | null | undefined): Promise<
 export async function getUserByUsername(username: string | null | undefined) {
   if (username) {
     const user = await firestore
-      .collection("users")
+      .collection("Users")
       .where("username", "==", username)
       .get();
     return user.docs.map((item) => ({ ...item.data() }))[0];
@@ -51,7 +51,7 @@ export async function getUserByUsername(username: string | null | undefined) {
 }
 
 export async function getUserByDocId(docId: string) {
-  const data = await firestore.collection("users").doc(docId).get();
+  const data = await firestore.collection("Users").doc(docId).get();
   return data.data();
 }
 

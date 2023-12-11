@@ -76,3 +76,4 @@ export async function updateTask(
         console.error("Update event failed!", error);
       });
   }
+

@@ -1,7 +1,7 @@
 import { firestore } from "../config/firebase";
 import { Task } from "../models/tasks";
 
-//demo api
+// create task
 export async function createTask(task: Task) {
     const newData = await firestore.collection("Tasks").add(task);
     return await firestore
@@ -9,8 +9,9 @@ export async function createTask(task: Task) {
       .doc(newData.id)
       .update({ ...task, id: newData.id }); // update id thanh docId de truy van cho de, create cai gi minh cung nen ntn
   }
-  
-  export async function getTasksByName(name: string) {
+
+// get tasks by name
+export async function getTasksByName(name: string) {
     const data = await firestore
       .collection("Tasks")
       .where("name", ">=", name)
@@ -22,7 +23,7 @@ export async function createTask(task: Task) {
     }));
   }
   
-    export async function getTasksByProjectId(id: string) {
+export async function getTasksByProjectId(id: string) {
       const data = await firestore
         .collection("Tasks")
         .where("project_id", "==", id)
@@ -33,8 +34,134 @@ export async function createTask(task: Task) {
       }));
     }
     
-  //get by doc id cho no unique
-  export async function getTaskByDocId(docId: string) {
+//get by doc id cho no unique
+export async function getTaskByDocId(docId: string) {
     const data = await firestore.collection("Tasks").doc(docId).get();
     return data.data();
   }
+
+// get tasks theo ngay
+export async function getDailyTasks(Day: Date) {
+    const start = new Date(Day)
+    start.setHours(0, 0, 0)
+
+    const end = new Date(Day)
+    end.setHours(23, 59, 59)
+
+    const data = await firestore
+      .collection("Tasks")
+      .where("due_at", "<=", end)
+      .where("due_at", ">=", start)
+      .get();
+    return data.docs.map((item) => ({
+      ...item.data(),
+      // docId: item.id,
+    }));
+  }
+
+// get task theo tuan
+export async function getWeeklyTasks(Day: Date) {
+    
+  const weekDay = Day.getDay()
+  const monthDay = Day.getDate()
+  const month = Day.getMonth()
+
+  // ngay dau tuan
+  const start = new Date(Day)
+  start.setMonth(month, monthDay - weekDay + 1)
+  start.setHours(0, 0, 0)
+
+  // ngay cuoi tuan
+  const end = new Date(Day)
+  end.setMonth(month, monthDay - weekDay + 7)
+  end.setHours(23, 59, 59)
+  
+  console.log(start, end)
+  const data = await firestore
+    .collection("Tasks")
+    .where("due_at", "<=", end)
+    .where("due_at", ">=", start)
+    .get();
+  return data.docs.map((item) => ({
+    ...item.data(),
+    // docId: item.id,
+  }));
+}
+
+// get task theo 1 khoang thoi gian nao do bat ki
+export async function getTasks(StartDay: Date, EndDay: Date) {
+  const start = new Date(StartDay)
+  start.setHours(0, 0, 0)
+
+  const end = new Date(EndDay)
+  end.setHours(23, 59, 59)
+
+  const data = await firestore
+    .collection("Tasks")
+    .where("due_at", "<=", end)
+    .where("due_at", ">=", start)
+    .get();
+  return data.docs.map((item) => ({
+    ...item.data(),
+    // docId: item.id,
+  }));
+}
+
+// get task theo thang
+export async function getMontlyTasks(Day: Date) {
+    
+    const month = Day.getMonth()
+    // ngay dau thang
+    const start = new Date(Day)
+    start.setMonth(month, 1)
+    start.setHours(0, 0, 0)
+
+    // ngay cuoi thang
+    const end = new Date(Day)
+    end.setMonth(month + 1, 0)
+    end.setHours(23, 59, 59)
+
+    const data = await firestore
+      .collection("Tasks")
+      .where("due_at", "<=", end)
+      .where("due_at", ">=", start)
+      .get();
+    return data.docs.map((item) => ({
+      ...item.data(),
+      // docId: item.id,
+    }));
+  }
+
+// get task qua han
+export async function getPassDueTasks(Day: Date) {
+    const start = new Date(Day)
+    start.setHours(0, 0, 0)
+
+    const f = false
+    const data = await firestore
+      .collection("Tasks")
+      .where("due_at", "<=", start)
+      .where("is_done", "==", f)
+      .get();
+    return data.docs.map((item) => ({
+      ...item.data(),
+      // docId: item.id,
+    }));
+  }
+
+// update task
+export async function updateTask(
+  docId: string | undefined,
+  task: Task,
+) {
+    const updatedData = await firestore.collection("Tasks").doc(docId);
+
+    updatedData
+    .update(task)
+    .then(() => {
+      console.log("Update task successfully!");
+    })
+    .catch((error) => {
+      console.error("Update task failed!", error);
+    });
+}

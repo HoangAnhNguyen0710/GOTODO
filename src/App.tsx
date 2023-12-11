@@ -3,6 +3,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { Home, NotFound, Auth, Login, Signup } from "./pages";
 import { useAuth } from "./hooks/useAuth";
+import Layout from "./components/layouts/PageLayout";
 
 function App() {
   const user = useAuth();
@@ -50,7 +51,7 @@ function App() {
   };
 
   return (
-    <>
+    <Layout>
         <Routes>
           <Route path="auth" element={<Auth />}>
             <Route path="login" element={<Login />} />
@@ -63,7 +64,7 @@ function App() {
           
           <Route path="*" element={<NotFound />}></Route>
         </Routes>
-    </>
+    </Layout>
   );
 }
 

@@ -1,8 +1,8 @@
 import { firebase, firestore } from "../../config/firebase";
-import { IUserModel } from "../../models";
+import { User } from "../../models";
 
 export async function createUser(
-  user: Omit<IUserModel, "id">,
+  user: Omit<User, "id">,
   password: string
 ) {
   const usernameValidate = await getUserByUsername(user.username);
@@ -25,17 +25,17 @@ export async function createUser(
       throw new Error(error.message);
     });
   // tra ve docId cua doc chua user
-  return newUser.data() as IUserModel;
+  return newUser.data() as User;
 }
 
-export async function getUserByEmail(email: string | null | undefined): Promise<IUserModel | null> {
+export async function getUserByEmail(email: string | null | undefined): Promise<User | null> {
   if (email) {
     const user = await firestore
       .collection("users")
       .where("email", "==", email)
       .get();
       if(user.docs.map((item) => ({ ...item.data() }))[0]) {
-    return user.docs.map((item) => ({ ...item.data() }))[0] as IUserModel;
+    return user.docs.map((item) => ({ ...item.data() }))[0] as User;
     }
   }
   return null;
@@ -67,7 +67,7 @@ export async function login(email: string, password: string) {
     .catch((error) => {
       throw new Error(error.message);
     });
-  return loggedIn as IUserModel;
+  return loggedIn as User;
 }
 
 export async function Logout() {

@@ -3,7 +3,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import { Home, NotFound, Auth, Login, Signup } from "./pages";
 import { useAuth } from "./hooks/useAuth";
-import Layout from "./components/layouts/PageLayout";
+import Layout from './components/layouts/Layout';
 
 function App() {
   const user = useAuth();
@@ -11,7 +11,7 @@ function App() {
  
   React.useEffect(() => {
     /* 
-      dung xoa de namduong test nha :D
+                          dung xoa de namduong test nha :D
     */
 
     // async function getFavouriteFood() {
@@ -51,20 +51,20 @@ function App() {
   };
 
   return (
-    <Layout>
+    <>
         <Routes>
           <Route path="auth" element={<Auth />}>
             <Route path="login" element={<Login />} />
             <Route path="sign-up" element={<Signup />} />
           </Route>
-          
-            <Route path="/" element={<Home/>}>
-              {/* <Route path="food/:id" element={<FoodDetail></FoodDetail>}></Route> */}
-            </Route>
-          
-          <Route path="*" element={<NotFound />}></Route>
+          <Route element={<Layout />}>
+              <Route path="/" element={<Home/>}>
+                {/* <Route path="food/:id" element={<FoodDetail></FoodDetail>}></Route> */}
+              </Route>
+            <Route path="*" element={<NotFound />}></Route> 
+          </Route>
         </Routes>
-    </Layout>
+    </>
   );
 }
 

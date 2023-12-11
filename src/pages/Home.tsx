@@ -1,66 +1,155 @@
-import { useEffect } from "react";
-import { Header } from "../components";
 import { Outlet } from "react-router-dom";
-import { Task } from "../models/tasks";
-import { createTask, getDailyTasks, getMontlyTasks, getPassDueTasks, getWeeklyTasks } from "../services/Task";
+import  Calendar from '@toast-ui/react-calendar';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
+import { Radio, RadioChangeEvent, Tabs } from 'antd';
+import { useState } from "react";
+import React from "react";
+
+const ListEventObject = [
+  {
+    id: '1',
+    calendarId: 'cal1',
+    title: 'timed event',
+    body: 'TOAST UI Calendar',
+    start: '2023-12-11T10:00:00',
+    end: '2023-12-11T11:00:00',
+    location: 'Meeting Room A',
+    attendees: ['A', 'B', 'C'],
+    category: 'time',
+    state: 'Free',
+    isReadOnly: true,
+    color: '#fff',
+    backgroundColor: '#ccc',
+    customStyle: {
+      fontStyle: 'italic',
+      fontSize: '15px',
+    },
+  },
+]
 
 function Home() {
-  useEffect(() => {
-    // async function createT(task: Task) {
-    //   return await createTask(task)
-    // }
+  const [type, setType] = useState<String>('week');
+  const calendarRef = React.createRef();
+  const initialEvents = [
+    {
+      id: '1',
+      calendarId: 'cal1',
+      title: 'Lunch',
+      category: 'time',
+      start: '2023-12-11T12:00:00',
+      end: '2023-12-11T13:30:00',
+    },
+    {
+      id: '2',
+      calendarId: 'cal1',
+      title: 'Coffee Break',
+      category: 'time',
+      start: '2023-12-11T10:00:00',
+      end: '2023-12-14T13:30:00',
+    },
+    {
+      id: '3',
+      calendarId: 'cal1',
+      title: 'Homework',
+      category: 'time',
+      start: '2023-12-11T14:40:00',
+      end: '2023-12-11T14:41:00',
+    },
+    {
+      id: '4',
+      calendarId: 'cal1',
+      title: 'Homework2',
+      category: 'time',
+      start: '2023-12-11T14:50:00',
+      end: '2023-12-11T14:50:00',
+    },
+  ];
 
-    async function getDaily(Day: Date) {
-      const data = await getWeeklyTasks(Day)
-      console.log(data)
-      const passDue = await getPassDueTasks(Day)
-      console.log(passDue)
-      return data
-    }
+  const calendarOptions = {
+    // height:"700px",
+    view: type,
+    week:{
+      startDayOfWeek: 1,
+      dayNames: ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'],
+      narrowWeekend: false,
+      workweek: false,
+      showNowIndicator: true,
+      showTimezoneCollapseButton: false,
+      timezonesCollapsed: false,
+      hourStart: 0,
+      hourEnd: 24,
+      eventView: true,
+      taskView: true,
+      collapseDuplicateEvents: false,
+    },
+    useDetailPopup:true,
+    events:initialEvents,
+    task:initialEvents,
+  };
+  const onChange = (e: RadioChangeEvent) => {
+    setType(e.target.value);
+  };
 
-    // async function getMonthly(Day: Date) {
-    //   const data = await getMontlyTasks(Day)
-    //   console.log(data)
-    //   return data
-    // }
-    
-    // const task1 = {
-    //   id: '',
-    //   due_at: new Date(Date.now()),
-    //   name: "task 1",
-    //   priority: 1,
-    //   description: "task 1",
-    //   is_done: false,
-    // }
-
-    // const task2 = {
-    //   id: '',
-    //   due_at: new Date(Date.now()),
-    //   name: "task 2",
-    //   priority: 1,
-    //   description: "task 2",
-    //   is_done: false,
-    // }
-
-    // const task3 = {
-    //   id: '',
-    //   due_at: new Date(Date.now()),
-    //   name: "task 3",
-    //   priority: 3,
-    //   description: "task 3",
-    //   is_done: false,
-    // }
-    // createT(task1)
-    // createT(task2)
-    // createT(task3)
-
-    getDaily(new Date(Date.now()))
-    // getMonthly(new Date(Date.now()))
-  }, [])
   return (
     <>
-      <div>
-         day la home
+
+      <div className=" max-w-7xl px-2 mx-auto font-montserrat bg-white drop-shadow-md rounded-lg">
+        <div className="p-4">
+          <nav className="navbar py-2 mx-8 flex flex-row items-center justify-between">
+            <div className="">
+              <button
+                type="button"
+                className="inline-block rounded bg-slate-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-800 shadow-[0_4px_9px_-4px_#cbcbcb] transition duration-150 ease-in-out hover:bg-neutral-100 hover:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] focus:bg-neutral-100 focus:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] focus:outline-none focus:ring-0 active:bg-neutral-200 active:shadow-[0_8px_9px_-4px_rgba(203,203,203,0.3),0_4px_18px_0_rgba(203,203,203,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(251,251,251,0.3)] dark:hover:shadow-[0_8px_9px_-4px_rgba(251,251,251,0.1),0_4px_18px_0_rgba(251,251,251,0.05)] dark:focus:shadow-[0_8px_9px_-4px_rgba(251,251,251,0.1),0_4px_18px_0_rgba(251,251,251,0.05)] dark:active:shadow-[0_8px_9px_-4px_rgba(251,251,251,0.1),0_4px_18px_0_rgba(251,251,251,0.05)]">
+                Hôm nay
+              </button>
+            </div>
+            <div className="flex flew-row">
+              <div className="-rotate-90 cursor-pointer">
+                <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.001 6L6.00098 1L1.00098 6" stroke="black" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div className="uppercase text-sm font-semibold text-gray-600 my-8">Tháng 12/2023</div>
+              <div className="rotate-90 cursor-pointer">
+                <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.001 6L6.00098 1L1.00098 6" stroke="black" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div className="">
+              <Radio.Group value={type} onChange={onChange}>
+                <Radio.Button value="month">Tháng</Radio.Button>
+                <Radio.Button value="week">Tuần</Radio.Button>
+                <Radio.Button value="day">Ngày</Radio.Button>
+              </Radio.Group>
+            </div>
+          </nav>
+          <Calendar ref={calendarRef} {...calendarOptions} />
+        {/* <Calendar
+          height="700px"
+          view={type}
+          week={{
+            startDayOfWeek: 1,
+            dayNames: ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'],
+            narrowWeekend: false,
+            workweek: false,
+            showNowIndicator: true,
+            showTimezoneCollapseButton: false,
+            timezonesCollapsed: false,
+            hourStart: 0,
+            hourEnd: 24,
+            eventView: true,
+            taskView: true,
+            collapseDuplicateEvents: false,
+            
+          }}
+          useDetailPopup={true}
+          events={initialEvents}
+          task={initialEvents}
+          // onAfterRenderEvent={onAfterRenderEvent}
+        /> */}
+          <Outlet></Outlet>
+        </div>
       </div>
     </>
   );

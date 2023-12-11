@@ -2,68 +2,107 @@ import { Outlet } from "react-router-dom";
 import  Calendar from '@toast-ui/react-calendar';
 import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import { Radio, RadioChangeEvent, Tabs } from 'antd';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import React from "react";
+import moment from "moment";
 
-const ListEventObject = [
+const initialEvents = [
   {
     id: '1',
     calendarId: 'cal1',
-    title: 'timed event',
-    body: 'TOAST UI Calendar',
-    start: '2023-12-11T10:00:00',
-    end: '2023-12-11T11:00:00',
-    location: 'Meeting Room A',
-    attendees: ['A', 'B', 'C'],
+    title: 'Lunch',
     category: 'time',
-    state: 'Free',
-    isReadOnly: true,
-    color: '#fff',
-    backgroundColor: '#ccc',
-    customStyle: {
-      fontStyle: 'italic',
-      fontSize: '15px',
-    },
+    start: '2023-12-11T12:00:00',
+    end: '2023-12-11T13:30:00',
+    backgroundColor: "#166af0"
   },
-]
+  {
+    id: '2',
+    calendarId: 'cal1',
+    title: 'Coffee Break',
+    category: 'time',
+    start: '2023-12-11T10:00:00',
+    end: '2023-12-14T13:30:00',
+    backgroundColor: "#f759a3"
+    
+  },
+  {
+    id: '3',
+    calendarId: 'cal1',
+    title: 'Homework ITSS',
+    category: 'task',
+    // start: '2023-12-11T14:40:00',
+    end: '2023-12-11T13:00:00',
+    backgroundColor: "#f5d56e"
+  },
+  {
+    id: '4',
+    calendarId: 'cal1',
+    title: 'Homework Machine Learning',
+    category: 'task',
+    // start: '2023-12-11T:40:00',
+    end: '2023-12-11T23:59:00',
+    backgroundColor: "#6ef575"
+  },
+  {
+    id: '5',
+    calendarId: 'cal1',
+    title: 'Homework ITSS',
+    category: 'task',
+    // start: '2023-12-11T14:40:00',
+    end: '2023-12-19T13:00:00',
+    backgroundColor: "#f5d56e"
+  },
+];
 
 function Home() {
   const [type, setType] = useState<String>('week');
-  const calendarRef = React.createRef();
-  const initialEvents = [
-    {
-      id: '1',
-      calendarId: 'cal1',
-      title: 'Lunch',
-      category: 'time',
-      start: '2023-12-11T12:00:00',
-      end: '2023-12-11T13:30:00',
+  const [startDate, setStartDate] = useState<String>('')
+  const [endDate, setEndDate] = useState<String>('')
+  const calendarRef = React.useRef();
+  
+  const template = {
+    allday(event) {
+      return `${event.title}<i class="fa fa-refresh"></i>`;
     },
-    {
-      id: '2',
-      calendarId: 'cal1',
-      title: 'Coffee Break',
-      category: 'time',
-      start: '2023-12-11T10:00:00',
-      end: '2023-12-14T13:30:00',
+    alldayTitle() {
+      return 'All Day';
     },
-    {
-      id: '3',
-      calendarId: 'cal1',
-      title: 'Homework',
-      category: 'time',
-      start: '2023-12-11T14:40:00',
-      end: '2023-12-11T14:41:00',
-    },
-    {
-      id: '4',
-      calendarId: 'cal1',
-      title: 'Homework2',
-      category: 'time',
-      start: '2023-12-11T14:50:00',
-      end: '2023-12-11T14:50:00',
-    },
-  ];
+  };
+
+  const onAfterRenderEvent = () => {
+    const calendarInstance = calendarRef.current.getInstance();
+
+    const dateStart = moment(calendarInstance.getDateRangeStart().toDate()).format('YYYY/MM/DD')
+    const dateEnd = moment(calendarInstance.getDateRangeEnd().toDate()).format('YYYY/MM/DD')
+
+    setStartDate(dateStart)
+    setEndDate(dateEnd)
+    
+  };
+
+  const handleClickNextButton = () => {
+    const calendarInstance = calendarRef.current.getInstance();
+
+    calendarInstance.next();
+    const dateStart = moment(calendarInstance.getDateRangeStart().toDate()).format('YYYY/MM/DD')
+    const dateEnd = moment(calendarInstance.getDateRangeEnd().toDate()).format('YYYY/MM/DD')
+
+    setStartDate(dateStart)
+    setEndDate(dateEnd)
+    
+  };
+
+  const handleClickPrevButton = () => {
+    const calendarInstance = calendarRef.current.getInstance();
+
+    calendarInstance.prev();
+    const dateStart = moment(calendarInstance.getDateRangeStart().toDate()).format('YYYY/MM/DD')
+    const dateEnd = moment(calendarInstance.getDateRangeEnd().toDate()).format('YYYY/MM/DD')
+
+    setStartDate(dateStart)
+    setEndDate(dateEnd)
+  };
 
   const calendarOptions = {
     // height:"700px",
@@ -79,13 +118,26 @@ function Home() {
       hourStart: 0,
       hourEnd: 24,
       eventView: true,
-      taskView: true,
+      taskView: ['task'],
       collapseDuplicateEvents: false,
+    },
+    month:{
+      dayNames: ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'],
+      visibleWeeksCount: 0,
+      workweek: false,
+      narrowWeekend: false,
+      startDayOfWeek: 1,
+      isAlways6Weeks: false,
+      visibleEventCount: 6,
     },
     useDetailPopup:true,
     events:initialEvents,
-    task:initialEvents,
+    gridSelection:false,
+    template: template
+  
   };
+
+  
   const onChange = (e: RadioChangeEvent) => {
     setType(e.target.value);
   };
@@ -104,13 +156,13 @@ function Home() {
               </button>
             </div>
             <div className="flex flew-row">
-              <div className="-rotate-90 cursor-pointer">
+              <div className="-rotate-90 cursor-pointer" onClick={handleClickPrevButton}>
                 <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M11.001 6L6.00098 1L1.00098 6" stroke="black" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </div>
-              <div className="uppercase text-sm font-semibold text-gray-600 my-8">Tháng 12/2023</div>
-              <div className="rotate-90 cursor-pointer">
+              <div className="uppercase text-sm font-semibold text-gray-600 my-8">{startDate} - {endDate}</div>
+              <div className="rotate-90 cursor-pointer" onClick={handleClickNextButton}>
                 <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M11.001 6L6.00098 1L1.00098 6" stroke="black" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -124,7 +176,9 @@ function Home() {
               </Radio.Group>
             </div>
           </nav>
-          <Calendar ref={calendarRef} {...calendarOptions} />
+          <Calendar ref={calendarRef} {...calendarOptions} 
+            onAfterRenderEvent={onAfterRenderEvent}
+          />
         {/* <Calendar
           height="700px"
           view={type}

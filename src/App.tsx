@@ -11,7 +11,7 @@ function App() {
  
   React.useEffect(() => {
     /* 
-                          dung xoa de namduong test nha :D
+      dung xoa de namduong test nha :D
     */
 
     // async function getFavouriteFood() {

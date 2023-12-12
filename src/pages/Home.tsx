@@ -180,7 +180,8 @@ function Home() {
 
   return (
     <>
-      <Dialog open={openModal} onClose={onClose} fullWidth={true} maxWidth="lg">
+      {/* Read MUI Docs to customize size of dialog */}
+      <Dialog open={openModal} onClose={onClose} fullWidth={true} maxWidth="md">
         Custom ở phần dialog cho thành event detail popup
       </Dialog>
       <div className=" max-w-7xl px-2 mx-auto font-montserrat bg-white drop-shadow-md rounded-lg">

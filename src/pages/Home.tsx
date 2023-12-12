@@ -1,15 +1,33 @@
-import { Outlet } from "react-router-dom";
-import Calendar from "@toast-ui/react-calendar";
 import "@toast-ui/calendar/dist/toastui-calendar.min.css";
+import Calendar from "@toast-ui/react-calendar";
+import { Radio, RadioChangeEvent } from "antd";
+import moment from "moment";
+import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
-import { Radio, RadioChangeEvent, Tabs } from "antd";
-import { useRef, useState } from "react";
-import React from "react";
-import moment from "moment";
-import { Dialog } from "@mui/material";
+import { EventDialog } from "../components";
 
-const initialEvents = [
+export interface CalendarEvent {
+  id: string;
+  calendarId: string;
+  title: string;
+  category: "time" | "milestone" | "task";
+  dueDateClass?: string;
+  start?: string;
+  end: string;
+  bgColor?: string;
+  color?: string;
+  body?: string;
+  raw?: {
+    class?: string;
+    memo?: string;
+    priority: 0 | 1 | 2;
+  };
+  state?: string;
+}
+
+const initialEvents: CalendarEvent[] = [
   {
     id: "1",
     calendarId: "1",
@@ -17,6 +35,11 @@ const initialEvents = [
     category: "time",
     start: "2023-12-11T12:00:00",
     end: "2023-12-11T13:30:00",
+    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Meeting Room A",
+    raw: {
+      priority: 1,
+    },
   },
   {
     id: "2",
@@ -25,30 +48,47 @@ const initialEvents = [
     category: "time",
     start: "2023-12-11T10:00:00",
     end: "2023-12-14T13:30:00",
+    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Meeting Room A",
+    raw: {
+      priority: 2,
+    },
   },
   {
     id: "3",
     calendarId: "1",
     title: "Homework ITSS",
     category: "task",
-    // start: '2023-12-11T14:40:00',
     end: "2023-12-11T13:00:00",
+    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Meeting Room A",
+    raw: {
+      priority: 2,
+    },
   },
   {
     id: "4",
     calendarId: "2",
     title: "Homework Machine Learning",
     category: "task",
-    // start: '2023-12-11T:40:00',
     end: "2023-12-11T23:59:00",
+    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Meeting Room A",
+    raw: {
+      priority: 0,
+    },
   },
   {
     id: "5",
     calendarId: "1",
     title: "Homework ITSS",
     category: "task",
-    // start: '2023-12-11T14:40:00',
     end: "2023-12-19T13:00:00",
+    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    location: "Meeting Room A",
+    raw: {
+      priority: 2,
+    },
   },
 ];
 
@@ -72,9 +112,8 @@ function Home() {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [openModal, setOpenModal] = useState(false);
-  const [event, setEvent] = useState();
+  const [event, setEvent] = useState<CalendarEvent>();
   const calendarRef = React.useRef();
-
 
   const theme = {
     week: {
@@ -98,12 +137,15 @@ function Home() {
 
   const onClose = () => setOpenModal(false);
 
-  const handleClickEvent = (event) => {
+  const handleClickEvent = (eventObj) => {
+    const { event } = eventObj;
+
     setEvent(event);
     setOpenModal(true);
+    console.log(event);
   };
   const onAfterRenderEvent = () => {
-    const calendarInstance = calendarRef.current.getInstance();
+    const calendarInstance = calendarRef.current?.getInstance();
 
     const dateStart = moment(
       calendarInstance.getDateRangeStart().toDate()
@@ -117,7 +159,7 @@ function Home() {
   };
 
   const handleClickNextButton = () => {
-    const calendarInstance = calendarRef.current.getInstance();
+    const calendarInstance = calendarRef.current?.getInstance();
     // calendarInstance
     calendarInstance.next();
     const dateStart = moment(
@@ -132,7 +174,7 @@ function Home() {
   };
 
   const handleClickPrevButton = () => {
-    const calendarInstance = calendarRef.current.getInstance();
+    const calendarInstance = calendarRef.current?.getInstance();
 
     calendarInstance.prev();
     const dateStart = moment(
@@ -147,7 +189,7 @@ function Home() {
   };
 
   const handleClickNowButton = () => {
-    const calendarInstance = calendarRef.current.getInstance();
+    const calendarInstance = calendarRef.current?.getInstance();
     calendarInstance.today();
   };
 
@@ -207,10 +249,10 @@ function Home() {
 
   return (
     <>
-      {/* Read MUI Docs to customize size of dialog */}
-      <Dialog open={openModal} onClose={onClose} fullWidth={true} maxWidth="md">
-        Custom ở phần dialog cho thành event detail popup
-      </Dialog>
+      {event && (
+        <EventDialog open={openModal} onClose={onClose} event={event} />
+      )}
+
       <div className=" max-w-7xl px-2 mx-auto font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="p-4">
           <nav className="navbar py-2 mx-8 flex flex-row items-center justify-between">
@@ -244,29 +286,6 @@ function Home() {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </div>
-              <div className="uppercase text-sm font-semibold text-gray-600 my-8">
-                {startDate} - {endDate}
-              </div>
-              <div
-                className="rotate-90 cursor-pointer"
-                onClick={handleClickNextButton}
-              >
-                <svg
-                  width="12"
-                  height="7"
-                  viewBox="0 0 12 7"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                />
-                <path
-                  d="M11.001 6L6.00098 1L1.00098 6"
-                  stroke="black"
-                  strokeOpacity="0.4"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
               </div>
               <div className="uppercase text-sm font-semibold text-gray-600 my-8">
                 {startDate} - {endDate}

@@ -30,7 +30,9 @@
     "react-redux": "^8.0.7",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.11.2",
-    "tailwind": "^4.0.0"
+    "tailwind": "^4.0.0",
+    "tui-date-picker": "^4.3.3",
+    "tui-time-picker": "^2.1.6"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

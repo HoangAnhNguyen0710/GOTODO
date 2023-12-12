@@ -22,37 +22,47 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
       open={open}
       onClose={onClose}
       fullWidth={true}
-      maxWidth="sm"
-      {...others}
+      PaperProps={{
+        style: { borderRadius: 8, width: 560, height: 320 },
+      }}
     >
-      <div className="p-6 grid grid-cols-5 w-full">
-        <div className="col-span-3 border-r-2 border-r-gray">
-          <h2 className="text-3xl font-semibold mb-2">{event.title}</h2>
-          <div className="flex flex-row gap-2 items-center">
-            <div className="h-4 w-3 bg-red-500 rounded" />
-            <span>Loại công việc 3</span>
+      <div className="event-detail-popup h-full p-5 grid grid-cols-5">
+        <div className="main-info col-span-3 border-r border-slate-500 px-2">
+          <div className="title">
+            <h2 className="font-bold text-2xl">{event.title}</h2>
           </div>
-
-          <p className="mt-4">{body}</p>
+          <div className="project flex mt-2">
+            <div className="project-span w-10 h-5.5 bg-orange-600 rounded-md mr-2"></div>
+            <h4 className="font-semibold text-orange-600 text-sm">
+              Loại công việc 3
+            </h4>
+          </div>
+          <div className="description py-2 mr-2 mt-8">
+            <p className="text-sm">{body}</p>
+          </div>
         </div>
-        <div className="col-span-2 p-3">
-          <div className="flex flex-col gap-4">
-            <div>
-              <div className="text-sm font-semibold">Hạn</div>
-              <div className="text-red-500 font-semibold">
-                {moment(end.d.d).format("HH:mm | DD/MM/YYYY")}
-              </div>
+        <div className="sub-info p-2 ml-9 col-span-2 grid grid-rows-3 gap-2">
+          <div className="deadline">
+            <div className="deadline-label font-bold text-slate-600 text-base">
+              Hạn:
             </div>
-            <div>
-              <div className="text-sm font-semibold">Độ ưu tiên</div>
-              <div className="text-red-500">
-                {raw?.priority && PRIORITIES[raw.priority]}
-              </div>
+            <p className="text-orange-600 font-semibold">
+              {moment(end.d.d).format("HH:mm | DD/MM/YYYY")}
+            </p>
+          </div>
+          <div className="priority">
+            <div className="priority-label font-bold text-slate-600 text-base">
+              Độ ưu tiên
             </div>
-            <div>
-              <div className="text-sm font-semibold">Địa điểm</div>
-              <div className="text-grey-500">{location}</div>
+            <p className="text-orange-600 font-semibold">
+              {raw?.priority && PRIORITIES[raw.priority]}
+            </p>
+          </div>
+          <div className="location">
+            <div className="location-label font-bold text-slate-600 text-base">
+              Địa điểm:
             </div>
+            <p className="">{location}</p>
           </div>
         </div>
       </div>

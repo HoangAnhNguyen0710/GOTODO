@@ -75,18 +75,6 @@ function Home() {
   const [event, setEvent] = useState();
   const calendarRef = React.useRef();
 
-  const template = {
-    allday(event) {
-      return `${event.title}<i class="fa fa-refresh"></i>`;
-    },
-    popupDetailTitle(event) {
-      console.log("Haloz");
-      return <div>Haloz</div>;
-    },
-    alldayTitle() {
-      return "All Day";
-    },
-  };
 
   const theme = {
     week: {
@@ -205,11 +193,10 @@ function Home() {
       isAlways6Weeks: false,
       visibleEventCount: 6,
     },
-    useDetailPopup: true,
-    useFormPopup: true,
+    useDetailPopup: false,
+    useFormPopup: false,
     events: initialEvents,
     gridSelection: false,
-    template: template,
     calendars: calendars,
     theme: theme,
   };

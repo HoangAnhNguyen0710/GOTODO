@@ -5,6 +5,7 @@ import { Radio, RadioChangeEvent, Tabs } from "antd";
 import { useRef, useState } from "react";
 import React from "react";
 import moment from "moment";
+import { Dialog } from "@mui/material";
 
 const initialEvents = [
   {
@@ -55,23 +56,32 @@ const initialEvents = [
 ];
 
 function Home() {
-  const [type, setType] = useState<String>("week");
-  const [startDate, setStartDate] = useState<String>("");
-  const [endDate, setEndDate] = useState<String>("");
+  const [type, setType] = useState<string>("week");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [openModal, setOpenModal] = useState(false);
+  const [event, setEvent] = useState();
   const calendarRef = React.useRef();
 
   const template = {
     allday(event) {
       return `${event.title}<i class="fa fa-refresh"></i>`;
     },
-    PopupDetailTitle(event) {
-      return <div>Alo</div>;
+    popupDetailTitle(event) {
+      console.log("Haloz");
+      return <div>Haloz</div>;
     },
     alldayTitle() {
       return "All Day";
     },
   };
 
+  const onClose = () => setOpenModal(false);
+
+  const handleClickEvent = (event) => {
+    setEvent(event);
+    setOpenModal(true);
+  };
   const onAfterRenderEvent = () => {
     const calendarInstance = calendarRef.current.getInstance();
 
@@ -88,7 +98,7 @@ function Home() {
 
   const handleClickNextButton = () => {
     const calendarInstance = calendarRef.current.getInstance();
-
+    // calendarInstance
     calendarInstance.next();
     const dateStart = moment(
       calendarInstance.getDateRangeStart().toDate()
@@ -158,7 +168,7 @@ function Home() {
       isAlways6Weeks: false,
       visibleEventCount: 6,
     },
-    useDetailPopup: true,
+    useDetailPopup: false,
     events: initialEvents,
     gridSelection: false,
     template: template,
@@ -170,6 +180,9 @@ function Home() {
 
   return (
     <>
+      <Dialog open={openModal} onClose={onClose} fullWidth={true} maxWidth="lg">
+        Custom ở phần dialog cho thành event detail popup
+      </Dialog>
       <div className=" max-w-7xl px-2 mx-auto font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="p-4">
           <nav className="navbar py-2 mx-8 flex flex-row items-center justify-between">
@@ -240,6 +253,7 @@ function Home() {
             ref={calendarRef}
             {...calendarOptions}
             onAfterRenderEvent={onAfterRenderEvent}
+            onClickEvent={(event) => handleClickEvent(event)}
           />
           {/* <Calendar
           height="700px"

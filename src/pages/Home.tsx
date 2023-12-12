@@ -326,29 +326,6 @@ function Home() {
             onAfterRenderEvent={onAfterRenderEvent}
             onClickEvent={(event) => handleClickEvent(event)}
           />
-          {/* <Calendar
-          height="700px"
-          view={type}
-          week={{
-            startDayOfWeek: 1,
-            dayNames: ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'],
-            narrowWeekend: false,
-            workweek: false,
-            showNowIndicator: true,
-            showTimezoneCollapseButton: false,
-            timezonesCollapsed: false,
-            hourStart: 0,
-            hourEnd: 24,
-            eventView: true,
-            taskView: true,
-            collapseDuplicateEvents: false,
-            
-          }}
-          useDetailPopup={true}
-          events={initialEvents}
-          task={initialEvents}
-          // onAfterRenderEvent={onAfterRenderEvent}
-        /> */}
           <Outlet></Outlet>
         </div>
       </div>

@@ -68,13 +68,13 @@ const calendars = [
 ];
 
 function Home() {
-  const [type, setType] = useState<String>('week');
-  const [startDate, setStartDate] = useState<String>('')
-  const [endDate, setEndDate] = useState<String>('')
+  const [type, setType] = useState<string>('week');
+  const [startDate, setStartDate] = useState<string>('')
+  const [endDate, setEndDate] = useState<string>('')
   const calendarRef = React.useRef();
   
   const template = {
-    allday(event) {
+    allday(event: any) {
       return `${event.title}<i class="fa fa-refresh"></i>`;
     },
     alldayTitle() {

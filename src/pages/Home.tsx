@@ -2,17 +2,20 @@ import "@toast-ui/calendar/dist/toastui-calendar.min.css";
 import Calendar from "@toast-ui/react-calendar";
 import { Radio, RadioChangeEvent } from "antd";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import { EventDialog } from "../components";
+import { createEvent, getAllEvents } from "../services/Event";
+import { Event } from "../models/events";
 
 export interface CalendarEvent {
   id: string;
   calendarId: string;
   title: string;
   category: "time" | "milestone" | "task";
+  location?: string,
   dueDateClass?: string;
   start?: string;
   end: string;
@@ -113,8 +116,29 @@ function Home() {
   const [endDate, setEndDate] = useState<string>("");
   const [openModal, setOpenModal] = useState(false);
   const [event, setEvent] = useState<CalendarEvent>();
-  const calendarRef = React.useRef();
+  const calendarRef = React.useRef<any>();
 
+  useEffect(() => {
+    async function createEv(event: Event) {
+      return await createEvent(event)
+    }
+    async function getAllEv() {
+      const data = await getAllEvents()
+      console.log(data)
+    }
+    const testEv: Event = {
+      id: "5",
+      project_id: "1",
+      title: "Homework ITSS",
+      started_at: new Date(Date.now()).toISOString(),
+      ended_at: new Date(Date.now()).toISOString(),
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      location: "Meeting Room A",
+      priority: 2,
+    }
+    // createEv(testEv)
+    getAllEv()
+  }, [])
   const theme = {
     week: {
       nowIndicatorLabel: {

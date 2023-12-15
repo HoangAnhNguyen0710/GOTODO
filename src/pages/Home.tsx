@@ -4,9 +4,11 @@ import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 import { Radio, RadioChangeEvent, Tabs } from 'antd';
-import { useRef, useState } from "react";
+import { useState } from "react";
 import React from "react";
 import moment from "moment";
+import { Event } from "../models/events";
+import { createEvent, getAllEvents } from "../services/Event";
 
 const initialEvents = [
   {
@@ -71,8 +73,35 @@ function Home() {
   const [type, setType] = useState<string>('week');
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
-  const calendarRef = React.useRef();
-  
+  const [eventList, setEventList] = useState<Array<Event>>([])
+  const calendarRef = React.useRef<any>();
+  React.useEffect(() => {
+    async function getAll() {
+      return await getAllEvents()
+    }
+    
+    async function addEvent() {
+      const event: Event = {
+        id: '',
+        title: "event 123",
+        project_id: '',
+        started_at: new Date(Date.now()),
+        ended_at: new Date(Date.now()),
+        priority: 1,
+        description: 'bla bla bla',
+        location: "Ha Noi",
+        
+      }
+      return await createEvent(event)
+    }
+
+    addEvent()
+    // addEvent()
+    getAll().then((list: unknown) => {
+      console.log(list)
+      setEventList(list as Event[])
+    })
+  }, [])
   const template = {
     allday(event: any) {
       return `${event.title}<i class="fa fa-refresh"></i>`;
@@ -169,7 +198,7 @@ function Home() {
     },
     useDetailPopup:true,
     useFormPopup: true,
-    events:initialEvents,
+    events: eventList,
     gridSelection:false,
     template: template,
     calendars:calendars,

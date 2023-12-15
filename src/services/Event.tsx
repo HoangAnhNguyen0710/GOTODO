@@ -1,3 +1,4 @@
+import { Calendar } from "tui-date-picker";
 import { firestore } from "../config/firebase";
 import { Event } from "../models/events";
 
@@ -60,6 +61,18 @@ export async function getEvents(StartDay: Date, EndDay: Date) {
     }));
   }
 
+  // get events theo 1 khoang thoi gian nao do bat ki
+export async function getAllEvents() {
+
+  const data = await firestore
+    .collection("Events")
+    .get();
+  return data.docs.map((item) => ({
+    ...item.data(),
+    // docId: item.id,
+  }));
+}
+
 // update event
 export async function updateTask(
     docId: string | undefined,
@@ -77,3 +90,6 @@ export async function updateTask(
       });
   }
 
+// export function convertToCalendarEvents(events: Array<Event>) {
+//   const convertedData: 
+// }

@@ -3,7 +3,7 @@ export interface Event {
     project_id?: string,
     started_at: Date,
     ended_at: Date,
-    name: string,
+    title: string,
     priority: number,
     description: string,
     location?: string,

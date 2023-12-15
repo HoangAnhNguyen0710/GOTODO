@@ -1,14 +1,16 @@
 import { Calendar } from "tui-date-picker";
 import { firestore } from "../config/firebase";
 import { Event } from "../models/events";
+import { CalendarEvent } from "../pages/Home";
+import moment from "moment";
 
 // create event
 export async function createEvent(event: Event) {
-    const newData = await firestore.collection("Events").add(event);
+    const newData = await firestore.collection("Events").add(event)
     return await firestore
       .collection("Events")
       .doc(newData.id)
-      .update({ ...event, id: newData.id }); // update id thanh docId de truy van cho de, create cai gi minh cung nen ntn
+      .update({ ...event, id: newData.id }) // update id thanh docId de truy van cho de, create cai gi minh cung nen ntn
   }
   
 // get by name
@@ -38,7 +40,7 @@ export async function getEventsByProjectId(id: string) {
     
 //get by doc id cho no unique
 export async function getTaskByDocId(docId: string) {
-    const data = await firestore.collection("Events").doc(docId).get();
+    const data = await firestore.collection("Events").doc(docId).get()
     return data.data();
   }
 
@@ -67,10 +69,13 @@ export async function getAllEvents() {
   const data = await firestore
     .collection("Events")
     .get();
-  return data.docs.map((item) => ({
+  const dataList = data.docs.map((item) => ({
     ...item.data(),
     // docId: item.id,
   }));
+
+  const convertedList = convertToCalendarEvents(dataList as Array<Event>)
+  return convertedList
 }
 
 // update event
@@ -78,18 +83,40 @@ export async function updateTask(
     docId: string | undefined,
     event: Event,
   ) {
-      const updatedData = await firestore.collection("Events").doc(docId);
+      const updatedData = await firestore.collection("Events").doc(docId)
   
       updatedData
       .update(event)
       .then(() => {
-        console.log("Update event successfully!");
+        console.log("Update event successfully!")
       })
       .catch((error) => {
-        console.error("Update event failed!", error);
+        console.error("Update event failed!", error)
       });
   }
 
-// export function convertToCalendarEvents(events: Array<Event>) {
-//   const convertedData: 
-// }
+export function convertToCalendarEvents(events: Array<Event>) {
+
+  const convertedList: Array<CalendarEvent> = []
+
+  events.map((value) => {
+    const convertedData: CalendarEvent = {
+      id: value.id,
+      calendarId: value.project_id ? value.project_id : '',
+      title: value.title,
+      category: 'time',
+      start: value.started_at,
+      end: value.ended_at,
+      location: value.location,
+      body: value.description,
+      raw: {
+        priority: value.priority
+      },
+      state: 'state here'
+    }
+
+    convertedList.push(convertedData)
+  })
+
+  return convertedList
+}

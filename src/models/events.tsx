@@ -1,10 +1,10 @@
 export interface Event {
     id: string,
     project_id?: string,
-    started_at: Date,
-    ended_at: Date,
+    started_at: string,
+    ended_at: string,
     title: string,
-    priority: number,
+    priority: 0 | 1 | 2,
     description: string,
     location?: string,
 }

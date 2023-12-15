@@ -11,11 +11,11 @@ interface LayoutProps {
 
 const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex flex-col items-stretch">
+    <div className="flex flex-col items-stretch mx-4">
       <div className="min-h-screen">
         <Header />
         <div className="grid grid-cols-4 gap-3">
-            <div className="col-span-1 ml-6">
+            <div className="col-span-1">
                 <Sidebar/>
             </div>
             <main className="min-h-[calc(100vh-80px)] col-span-3">{children ? children : <Outlet />}</main>

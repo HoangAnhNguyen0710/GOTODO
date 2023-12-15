@@ -3,7 +3,7 @@ import { AiFillFacebook, AiFillYoutube, AiOutlineInstagram } from "react-icons/a
 
 const Footer = () => {
     return (
-        <section className="mobile:px-4 bg-slate-200 px-[8%] py-16">
+        <section className="mobile:px-4 bg-slate-200 px-[8%] py-16 mt-10">
           <div className="mobile:flex-col border-white-200 flex justify-between border-b border-solid pb-8 pt-16">
           </div>
     

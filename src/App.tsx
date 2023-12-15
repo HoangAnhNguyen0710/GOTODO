@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { Home, NotFound, Auth, Login, Signup } from "./pages";
 import { useAuth } from "./hooks/useAuth";
 import Layout from './components/layouts/Layout';
+import Todo from "./pages/Todo";
 
 function App() {
   const user = useAuth();
@@ -59,6 +60,9 @@ function App() {
           </Route>
           <Route element={<Layout />}>
               <Route path="/" element={<Home/>}>
+                {/* <Route path="food/:id" element={<FoodDetail></FoodDetail>}></Route> */}
+              </Route>
+              <Route path="/Todo" element={<Todo/>}>
                 {/* <Route path="food/:id" element={<FoodDetail></FoodDetail>}></Route> */}
               </Route>
             <Route path="*" element={<NotFound />}></Route> 

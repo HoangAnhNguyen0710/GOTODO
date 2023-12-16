@@ -2,7 +2,7 @@ export interface Task {
     id: string,
     project_id?: string,
     due_at: string,
-    name: string,
+    title: string,
     priority: number,
     description: string,
     is_done: boolean,

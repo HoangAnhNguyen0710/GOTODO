@@ -5,6 +5,8 @@ import { Home, NotFound, Auth, Login, Signup } from "./pages";
 import { useAuth } from "./hooks/useAuth";
 import Layout from './components/layouts/Layout';
 import Todo from "./pages/Todo";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function App() {
   const user = useAuth();
@@ -44,15 +46,15 @@ function App() {
     // deleteReviewById();
     // LoginTest();
   }, []);
-  const [query, setQuery] = useState("");
-  const [searchOption, setSearchOption] = useState(1);
-  const getQueryDataHandler = (query: string, option: number) => {
-    setQuery(query);
-    setSearchOption(option);
-  };
+  // const [query, setQuery] = useState("");
+  // const [searchOption, setSearchOption] = useState(1);
+  // const getQueryDataHandler = (query: string, option: number) => {
+  //   setQuery(query);
+  //   setSearchOption(option);
+  // };
 
   return (
-    <>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Routes>
           <Route path="auth" element={<Auth />}>
             <Route path="login" element={<Login />} />
@@ -68,7 +70,7 @@ function App() {
             <Route path="*" element={<NotFound />}></Route> 
           </Route>
         </Routes>
-    </>
+    </LocalizationProvider>
   );
 }
 

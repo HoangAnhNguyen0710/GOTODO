@@ -1,23 +1,41 @@
 
 import { Checkbox } from "@mui/material";
-import Radio from "antd/es/radio";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { SlCalender } from "react-icons/sl";
 import { FaTasks } from "react-icons/fa";
 import { Button } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
+import CreateEventDialog from "../popup/CreateEventDialog";
+import CreateTaskDialog from "../popup/CreateTaskDialog";
 
 export interface Items {
-  id:number,
-  text: String
+  id: number,
+  text: string
 }
 
 const items: Items[] = [{id: 1, text:'Công việc 1'}, {id: 2, text:'Công việc 2'}]
 
 const Sidebar = () => {
   const [state, setState] = useState<number>(1);
-  const [dropDown, setDropDown] = useState<boolean>(false);
+  const [dropDown, setDropDown] = useState<boolean>(false)
+
+  const [isOpenEventDialog, setOpenEventDialog] = useState<boolean>(false)
+  const [isOpenTaskDialog, setOpenTaskDialog] = useState<boolean>(false)
+
+  const handleOpenTaskDialog = () => {
+    setOpenTaskDialog(true)
+  }
+  const handleCloseTaskDialog = () => {
+    setOpenTaskDialog(false)
+  }
+
+  const handleOpenEventDialog = () => {
+    setOpenEventDialog(true)
+  }
+  const handleCloseEventDialog = () => {
+    setOpenEventDialog(false)
+  }
 
   const changeState = (newState: number) => {
     setState(newState);
@@ -73,20 +91,27 @@ const Sidebar = () => {
           </div>
           <div className="flex flex-wrap justify-between items-center mx-auto mt-6 my-4 max-w-screen-xl">
             <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-3 text-center me-2 mb-2"
+              onClick={handleOpenTaskDialog}
             >
-              + Thêm công việc
+              + Thêm task
+            </button>
+
+            <button type="button" className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-3 text-center me-2 mb-2"
+             onClick={handleOpenEventDialog}
+            >
+              + Thêm event
             </button>
           </div>
 
-          <div className="px-8 text-center flex flex-row items-center">
+          <div className="px-8 text-center flex flex-row items-center justify-center">
             <Link to="/Todo" className="" onClick={() => changeState(0)}>
-            <Button  className={state === 0 ? "bg-white w-36 h-36 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-32 h-32 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
+            <Button  className={state === 0 ? "bg-white w-48 h-48 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-40 h-40 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
                 <FaTasks className="text-3xl mt-8 mb-2"/>
                 <span> Todo </span>
               </Button>
             </Link>
             <Link to="/" className="ml-2" onClick={() => changeState(1)}>
-              <Button className={state === 1 ? "bg-white w-36 h-36 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-32 h-32 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
+              <Button className={state === 1 ? "bg-white w-48 h-48 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-40 h-40 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
                 <SlCalender className="text-3xl mt-8 mb-2"/>
                 <span> Calender </span>
               </Button>
@@ -107,6 +132,8 @@ const Sidebar = () => {
           </div>
             
           </nav>
+          <CreateEventDialog open={isOpenEventDialog} handleClose={handleCloseEventDialog}/>
+          <CreateTaskDialog open={isOpenTaskDialog} handleClose={handleCloseTaskDialog}/>
       </React.Fragment>
   )
 }

@@ -33,7 +33,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
           </div>
           <div className="project flex mt-2">
             <div className="project-span w-10 h-5.5 bg-orange-600 rounded-md mr-2"></div>
-            <h4 className="font-semibold text-orange-600 text-sm">
+            <h4 className="font-semibold  text-orange-600 text-sm">
               Loại công việc 3
             </h4>
           </div>
@@ -47,7 +47,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
               Hạn:
             </div>
             <p className="text-orange-600 font-semibold">
-              {moment(end.d.d).format("HH:mm | DD/MM/YYYY")}
+              {/* {moment(end.d.d).format("HH:mm | DD/MM/YYYY")} */}
             </p>
           </div>
           <div className="priority">

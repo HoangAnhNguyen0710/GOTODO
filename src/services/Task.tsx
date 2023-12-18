@@ -48,10 +48,11 @@ export async function getDailyTasks(Day: Date) {
     const end = new Date(Day)
     end.setHours(23, 59, 59)
 
+    console.log(start, end)
     const data = await firestore
       .collection("Tasks")
-      .where("due_at", "<=", end)
-      .where("due_at", ">=", start)
+      .where("due_at", "<=", end.toISOString())
+      .where("due_at", ">=", start.toISOString())
       .get();
     return data.docs.map((item) => ({
       ...item.data(),
@@ -76,11 +77,10 @@ export async function getWeeklyTasks(Day: Date) {
   end.setMonth(month, monthDay - weekDay + 7)
   end.setHours(23, 59, 59)
   
-  console.log(start, end)
   const data = await firestore
     .collection("Tasks")
-    .where("due_at", "<=", end)
-    .where("due_at", ">=", start)
+    .where("due_at", "<=", end.toISOString())
+    .where("due_at", ">=", start.toISOString())
     .get();
   return data.docs.map((item) => ({
     ...item.data(),
@@ -98,8 +98,8 @@ export async function getTasks(StartDay: Date, EndDay: Date) {
 
   const data = await firestore
     .collection("Tasks")
-    .where("due_at", "<=", end)
-    .where("due_at", ">=", start)
+    .where("due_at", "<=", end.toISOString())
+    .where("due_at", ">=", start.toISOString())
     .get();
   return data.docs.map((item) => ({
     ...item.data(),
@@ -123,8 +123,8 @@ export async function getMontlyTasks(Day: Date) {
 
     const data = await firestore
       .collection("Tasks")
-      .where("due_at", "<=", end)
-      .where("due_at", ">=", start)
+      .where("due_at", "<=", end.toISOString())
+      .where("due_at", ">=", start.toISOString())
       .get();
     return data.docs.map((item) => ({
       ...item.data(),
@@ -140,7 +140,7 @@ export async function getPassDueTasks(Day: Date) {
     const f = false
     const data = await firestore
       .collection("Tasks")
-      .where("due_at", "<=", start)
+      .where("due_at", "<=", start.toISOString())
       .where("is_done", "==", f)
       .get();
     return data.docs.map((item) => ({

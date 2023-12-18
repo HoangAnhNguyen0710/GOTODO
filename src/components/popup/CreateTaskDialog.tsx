@@ -10,8 +10,8 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import dayjs, { Dayjs } from 'dayjs';
-import { FormEvent, useEffect, useState } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import { FormEvent, useState } from "react";
 import CircleIcon from "@mui/icons-material/Circle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import CreateIcon from "@mui/icons-material/Create";
@@ -22,47 +22,72 @@ import { createTask } from "../../services/Task";
 
 export interface CreateEventFormProps {
   open: boolean;
-  handleClose?: () => void;
+  handleClose: () => void;
 }
+
+const initialTaskData = {
+  id: "",
+  title: "",
+  description: "",
+  due_at: "",
+  priority: 1,
+  is_done: false,
+};
 
 export default function CreateTaskDialog({
   open,
   handleClose,
 }: CreateEventFormProps) {
-
-  const [task, setTask] = useState<Task>({
-    id: "",
-    title: "",
-    description: "",
-    due_at: "",
-    priority: 1,
-    is_done: false,
-  });
-  const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()))
-  const [endTime, setEndTime] = useState<Dayjs>(dayjs(0))
+  const [task, setTask] = useState<Task>(initialTaskData);
+  const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()));
+  const [endTime, setEndTime] = useState<Dayjs>(dayjs(0));
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleChangeEvent = (ev: FormEvent<HTMLInputElement> | any) => {
-    setTask({...task, [ev.currentTarget.name]: ev.currentTarget.value})
-  }
-  useEffect(() => {
-    console.log(task)
-  }, [task])
+    setTask({ ...task, [ev.currentTarget.name]: ev.currentTarget.value });
+  };
 
+  const validateTask = (task: Task) => {
+    console.log(errorMessage);
+    const currentTime = new Date().toISOString();
+    if (task.title === "") {
+      setErrorMessage("Chua nhap ten task");
+      return false;
+    }
+    if (task.due_at <= currentTime) {
+      setErrorMessage("deadline task chua hop le");
+      return false;
+    }
+    return true;
+  };
   const handleSubmitForm = async (ev: FormEvent) => {
-    ev.preventDefault()
-    let endT: Date
-    if(endDate) {
-      endT = new Date(endDate.toISOString())
-      endT.setHours(endTime?.hour(), endTime?.minute(), endTime?.second())
-      task.due_at = endT.toISOString()
+    ev.preventDefault();
+    let endT: Date;
+    if (endDate) {
+      endT = new Date(endDate.toISOString());
+      endT.setHours(endTime?.hour(), endTime?.minute(), endTime?.second());
+      task.due_at = endT.toISOString();
     }
 
-    await createTask(task).then(() => console.log("create task success"))
-  }
+    if (validateTask(task)) {
+      await createTask(task).then(() => {
+        setErrorMessage('')
+        alert("Create task success");
+        setTask(initialTaskData);
+        handleClose();
+      });
+    }
+  };
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
+        <div>
+          <span className="text-red-500 font-medium">
+            {errorMessage}
+            <br />
+          </span>
+        </div>
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit">
             <div className="flex items-center justify-center flex-col">
@@ -84,7 +109,9 @@ export default function CreateTaskDialog({
                     label="Do uu tien"
                     name="priority"
                     value={task.priority}
-                    onChange={(ev: any) =>  setTask({...task, "priority": ev.target.value})}
+                    onChange={(ev: any) =>
+                      setTask({ ...task, priority: ev.target.value })
+                    }
                   >
                     <MenuItem value={1}>
                       <CircleIcon color="error" />
@@ -153,7 +180,11 @@ export default function CreateTaskDialog({
                 />
               </div>
               <div>
-                <Button type="submit" variant="contained" onClick={handleSubmitForm}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  onClick={handleSubmitForm}
+                >
                   Create Task
                 </Button>
               </div>

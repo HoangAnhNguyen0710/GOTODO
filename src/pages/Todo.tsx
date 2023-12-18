@@ -5,8 +5,10 @@ import React, { useState, useEffect } from "react";
 import { getDailyTasks, getPassDueTasks } from "../services/Task";
 import moment from "moment";
 import "moment/locale/vi";
-import { Task } from "../models/tasks";
-// import { EventDialog } from "../components";
+import { Task } from '../models/tasks';
+import { EventDialog } from "../components";
+import { CalendarEvent } from "./Home";
+import { convertToCalendarEvents } from '../services/Event';
 
 const Todo = () => {
   const [todayTasks, setTodayTasks] = useState<Array<Task>>([])
@@ -14,7 +16,7 @@ const Todo = () => {
   const [openModal, setOpenModal] = useState(false);
   const [pastdueDropDown, setPastdueDropDown] = useState<boolean>(true)
   const [todayDropDown, setTodayDropDown] = useState<boolean>(true)
-  // const [event, setEvent] = useState<CalendarEvent>();
+  const [event, setEvent] = useState<CalendarEvent>();
 
   useEffect(() => {
     async function getTodayTasks() {
@@ -42,17 +44,35 @@ const Todo = () => {
 
   const onClose = () => setOpenModal(false);
 
+  const convertToCalendarEvent = (task: Task) => {
+    const convertedData: CalendarEvent = {
+      id: task.id,
+      calendarId: task.project_id ? task.project_id : '',
+      title: task.title,
+      category: 'task',
+      end: '',
+      due_at: task.due_at,
+      body: task.description,
+      raw: {
+        priority: task.priority
+      },
+      is_done: task.is_done,
+    }
+    return convertedData;
+  };
+
   const handleClickTask = (event) => {
-      console.log(event);
-      // setEvent(event);
-      setOpenModal(true);
+    const calendarEvent = convertToCalendarEvent(event)
+    console.log(calendarEvent);
+    setEvent(calendarEvent);
+    setOpenModal(true);
   }
 
   return (
     <React.Fragment>
-      {/* {event && (
+      {event && (
         <EventDialog open={openModal} onClose={onClose} event={event}/>
-      )} */}
+      )}
       <div className=" max-w-7xl px-2 mx-16 mt-16 font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="header p-2 mb-2 flex">
           <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
@@ -73,7 +93,7 @@ const Todo = () => {
                 key={pastdueTask.id}
               >
                 <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"></button>
-                <div className="detail-task mx-10 w-full"
+                <div className="detail-task mx-10 w-full cursor-pointer"
                   onClick={() => handleClickTask(pastdueTask)}
                 >
                   <h2 className="p-1 font-semibold text-base">
@@ -113,7 +133,7 @@ const Todo = () => {
                     : 
                     <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"></button>
                   }
-                <div className="detail-task mx-10 w-full"
+                <div className="detail-task mx-10 w-full cursor-pointer"
                   onClick={() => handleClickTask(todayTask)}
                 >
                   <h2 className="p-1 font-semibold text-base">

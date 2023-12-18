@@ -1,5 +1,6 @@
 import { firestore } from "../config/firebase";
 import { Task } from "../models/tasks";
+import { CalendarEvent } from "../pages/Home";
 
 // create task
 export async function createTask(task: Task) {
@@ -164,4 +165,41 @@ export async function updateTask(
     .catch((error) => {
       console.error("Update task failed!", error);
     });
+
+  }
+  
+export async function getAllTasks() {
+  const data = await firestore
+    .collection("Tasks")
+    .get();
+  const dataList = data.docs.map((item) => ({
+    ...item.data(),
+  }));
+
+  const convertedList = convertToCalendarEvents(dataList as Array<Task>)
+  return convertedList
+}
+
+export function convertToCalendarEvents(tasks: Array<Task>) {
+
+  const convertedList: Array<CalendarEvent> = []
+
+  tasks.map((value) => {
+    const convertedData: CalendarEvent = {
+      id: value.id,
+      calendarId: value.project_id ? value.project_id : '',
+      title: value.title,
+      category: 'task',
+      end: value.due_at,
+      body: value.description,
+      raw: {
+        priority: value.priority
+      },
+      state: 'state here'
+    }
+
+    convertedList.push(convertedData)
+  })
+
+  return convertedList
 }

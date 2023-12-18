@@ -10,8 +10,8 @@ import { Task } from "../models/tasks";
 
 
 const Todo = () => {
-  const [todayTasks, setTodayTasks] = useState([])
-  const [pastdueTasks, setPastdueTasks] = useState([])
+  const [todayTasks, setTodayTasks] = useState<Array<Task>>([])
+  const [pastdueTasks, setPastdueTasks] = useState<Array<Task>>([])
   const [openModal, setOpenModal] = useState(false);
   const [pastdueDropDown, setPastdueDropDown] = useState<boolean>(true)
   const [todayDropDown, setTodayDropDown] = useState<boolean>(true)
@@ -20,13 +20,15 @@ const Todo = () => {
     async function getTodayTasks() {
       const today = new Date();
       const data = await getDailyTasks(today)
-      setTodayTasks(data)
+      console.log(data)
+      setTodayTasks(data as Array<Task>)
     }
     getTodayTasks()
     async function getPassdueTasks() {
       const today = new Date();
       const data = await getPassDueTasks(today)
-      setPastdueTasks(data)
+      console.log(data)
+      setPastdueTasks(data as Array<Task>)
     }
     getPassdueTasks()
   }, [])
@@ -65,7 +67,7 @@ const Todo = () => {
             <h3 className="p-2 font-bold text-lg text-red-500">Quá hạn</h3>
           </div>
           {pastdueDropDown ? (
-            pastdueTasks.map((pastdueTask) => (
+            pastdueTasks.map((pastdueTask: Task) => (
               <div
                 className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
                 key={pastdueTask.id}
@@ -75,7 +77,7 @@ const Todo = () => {
                   onClick={() => handleClickTask(pastdueTask)}
                 >
                   <h2 className="p-1 font-semibold text-base">
-                    {pastdueTask.name}
+                    {pastdueTask.title}
                   </h2>
                   <div className="description">
                     <p className="font-extralight text-xs mb-1">
@@ -101,7 +103,7 @@ const Todo = () => {
             </h3>
           </div>
           {todayDropDown ? (
-            todayTasks.map((todayTask) => (
+            todayTasks.map((todayTask: Task) => (
               <div
                 className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
                 key={todayTask.id}
@@ -115,7 +117,7 @@ const Todo = () => {
                   onClick={() => handleClickTask(todayTask)}
                 >
                   <h2 className="p-1 font-semibold text-base">
-                    {todayTask.name}
+                    {todayTask.title}
                   </h2>
                   <div className="description">
                     <p className="font-extralight text-xs mb-1">

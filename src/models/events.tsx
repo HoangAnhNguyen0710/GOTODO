@@ -4,7 +4,7 @@ export default interface Event {
     started_at: string,
     ended_at: string,
     title: string,
-    priority: 0 | 1 | 2,
+    priority: number,
     description: string,
     location?: string,
 }

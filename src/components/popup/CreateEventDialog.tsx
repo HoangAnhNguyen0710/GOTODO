@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import Event from "../../models/events";
 import CircleIcon from "@mui/icons-material/Circle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -23,7 +23,17 @@ import { createEvent } from "../../services/Event";
 
 export interface CreateEventFormProps {
   open: boolean;
-  handleClose?: () => void;
+  handleClose: () => void;
+}
+
+const initialEventData = {
+  id: "",
+  title: "",
+  description: "",
+  started_at: "",
+  ended_at: "",
+  priority: 1,
+  location: "",
 }
 
 export default function CreateEventDialog({
@@ -31,26 +41,34 @@ export default function CreateEventDialog({
   handleClose,
 }: CreateEventFormProps) {
 
-  const [event, setEvent] = useState<Event>({
-    id: "",
-    title: "",
-    description: "",
-    started_at: "",
-    ended_at: "",
-    priority: 1,
-    location: "",
-  });
+  const [event, setEvent] = useState<Event>(initialEventData);
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs(Date.now()))
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()))
   const [startTime, setStartTime] = useState<Dayjs>(dayjs(0))
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(0))
 
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const handleChangeEvent = (ev: FormEvent<HTMLInputElement> | FormEvent<HTMLSelectElement> | any) => {
     setEvent({...event, [ev.currentTarget.name]: ev.currentTarget.value})
   }
-  useEffect(() => {
-    console.log(event)
-  }, [event])
+
+  const validateEvent = (event: Event) => {
+    console.log(errorMessage)
+    const currentTime = new Date().toISOString()
+    if (event.title === "") {
+      setErrorMessage("Chua nhap ten event")
+      return false
+    }
+    if (event.started_at <= currentTime) {
+      setErrorMessage("thoi gian bat dau event chua hop le")
+      return false
+    }
+    if (event.ended_at <= currentTime || event.ended_at <= event.started_at) {
+      setErrorMessage("thoi gian ket thuc event chua hop le")
+      return false
+    }
+    return true
+  }
 
   const handleSubmitForm = async (ev: FormEvent) => {
     ev.preventDefault()
@@ -66,13 +84,23 @@ export default function CreateEventDialog({
       endT.setHours(endTime?.hour(), endTime?.minute(), endTime?.second())
       event.ended_at = endT.toISOString()
     }
-
-    await createEvent(event).then(() => console.log("create event success"))
+    if(validateEvent(event)){
+    await createEvent(event).then(() => {
+      setErrorMessage('')
+      alert("Create event success")
+      setEvent(initialEventData)
+      handleClose()
+    }
+    )
+    }
   }
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
+        <div>
+          <span className="text-red-500 font-medium">{errorMessage}<br/></span>
+        </div>
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit">
             <div className="flex items-center justify-center flex-col">
@@ -83,6 +111,7 @@ export default function CreateEventDialog({
                   name="title"
                   value={event.title}
                   onChange={(ev: any) => handleChangeEvent(ev)}
+                  required
                 />
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="medium">
                   <InputLabel id="demo-select-small-label">
@@ -130,6 +159,7 @@ export default function CreateEventDialog({
                       </InputAdornment>
                     ),
                   }}
+                  required
                 />
               </div>
               <div className="py-3 w-full flex ">

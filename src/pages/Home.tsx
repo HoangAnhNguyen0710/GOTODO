@@ -8,7 +8,8 @@ import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import { EventDialog } from "../components";
 import { createEvent, getAllEvents } from "../services/Event";
-import { Event } from "../models/events";
+import Event from "../models/events";
+import { useGetAllEvents } from "../hooks/useGetAllEvents";
 
 export interface CalendarEvent {
   id: string;
@@ -25,75 +26,10 @@ export interface CalendarEvent {
   raw?: {
     class?: string;
     memo?: string;
-    priority: 0 | 1 | 2;
+    priority: number;
   };
   state?: string;
 }
-
-const initialEvents: CalendarEvent[] = [
-  {
-    id: "1",
-    calendarId: "1",
-    title: "Lunch",
-    category: "time",
-    start: "2023-12-11T12:00:00",
-    end: "2023-12-11T13:30:00",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    location: "Meeting Room A",
-    raw: {
-      priority: 1,
-    },
-  },
-  {
-    id: "2",
-    calendarId: "2",
-    title: "Coffee Break",
-    category: "time",
-    start: "2023-12-11T10:00:00",
-    end: "2023-12-14T13:30:00",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    location: "Meeting Room A",
-    raw: {
-      priority: 2,
-    },
-  },
-  {
-    id: "3",
-    calendarId: "1",
-    title: "Homework ITSS",
-    category: "task",
-    end: "2023-12-11T13:00:00",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    location: "Meeting Room A",
-    raw: {
-      priority: 2,
-    },
-  },
-  {
-    id: "4",
-    calendarId: "2",
-    title: "Homework Machine Learning",
-    category: "task",
-    end: "2023-12-11T23:59:00",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    location: "Meeting Room A",
-    raw: {
-      priority: 0,
-    },
-  },
-  {
-    id: "5",
-    calendarId: "1",
-    title: "Homework ITSS",
-    category: "task",
-    end: "2023-12-19T13:00:00",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    location: "Meeting Room A",
-    raw: {
-      priority: 2,
-    },
-  },
-];
 
 const calendars = [
   {
@@ -117,26 +53,15 @@ function Home() {
   const [openModal, setOpenModal] = useState(false);
   const [event, setEvent] = useState<CalendarEvent>();
   const calendarRef = React.useRef<any>();
+  const [initialEvents, setInitialEvents] = useState<CalendarEvent[]>([])
+  // console.log(initialEvents)
 
   useEffect(() => {
-    async function createEv(event: Event) {
-      return await createEvent(event)
-    }
     async function getAllEv() {
       const data = await getAllEvents()
-      console.log(data)
+      setInitialEvents(data)
+      return
     }
-    const testEv: Event = {
-      id: "5",
-      project_id: "1",
-      title: "Homework ITSS",
-      started_at: new Date(Date.now()).toISOString(),
-      ended_at: new Date(Date.now()).toISOString(),
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      location: "Meeting Room A",
-      priority: 2,
-    }
-    // createEv(testEv)
     getAllEv()
   }, [])
   const theme = {

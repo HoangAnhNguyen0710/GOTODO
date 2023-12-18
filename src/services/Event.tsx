@@ -1,6 +1,6 @@
 import { Calendar } from "tui-date-picker";
 import { firestore } from "../config/firebase";
-import { Event } from "../models/events";
+import  Event from "../models/events";
 import { CalendarEvent } from "../pages/Home";
 import moment from "moment";
 

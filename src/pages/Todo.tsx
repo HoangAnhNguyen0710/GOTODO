@@ -5,9 +5,8 @@ import React, { useState, useEffect } from "react";
 import { getDailyTasks, getPassDueTasks } from "../services/Task";
 import moment from "moment";
 import "moment/locale/vi";
-import { EventDialog } from "../components";
 import { Task } from "../models/tasks";
-
+// import { EventDialog } from "../components";
 
 const Todo = () => {
   const [todayTasks, setTodayTasks] = useState<Array<Task>>([])
@@ -15,6 +14,7 @@ const Todo = () => {
   const [openModal, setOpenModal] = useState(false);
   const [pastdueDropDown, setPastdueDropDown] = useState<boolean>(true)
   const [todayDropDown, setTodayDropDown] = useState<boolean>(true)
+  // const [event, setEvent] = useState<CalendarEvent>();
 
   useEffect(() => {
     async function getTodayTasks() {
@@ -42,16 +42,16 @@ const Todo = () => {
 
   const onClose = () => setOpenModal(false);
 
-  const handleClickTask = (task) => {
-      console.log(task);
-      // setEvent(task);
+  const handleClickTask = (event) => {
+      console.log(event);
+      // setEvent(event);
       setOpenModal(true);
   }
 
   return (
     <React.Fragment>
-      {/* {task && (
-        <EventDialog open={openModal} onClose={onClose} />
+      {/* {event && (
+        <EventDialog open={openModal} onClose={onClose} event={event}/>
       )} */}
       <div className=" max-w-7xl px-2 mx-16 mt-16 font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="header p-2 mb-2 flex">
@@ -86,7 +86,7 @@ const Todo = () => {
                   </div>
                   <div className="date font-extralight text-xs text-red-500">
                     <CalendarOutlined className="mr-1" />
-                    09/10
+                    {moment(pastdueTask.due_at).format("DD/MM")}
                   </div>
                 </div>
               </div>

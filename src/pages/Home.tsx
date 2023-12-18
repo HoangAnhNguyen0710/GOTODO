@@ -8,6 +8,7 @@ import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import { EventDialog } from "../components";
 import { createEvent, getAllEvents } from "../services/Event";
+import { getAllTasks } from "../services/Task";
 import Event from "../models/events";
 import { useGetAllEvents } from "../hooks/useGetAllEvents";
 
@@ -54,11 +55,13 @@ function Home() {
   const [event, setEvent] = useState<CalendarEvent>();
   const calendarRef = React.useRef<any>();
   const [initialEvents, setInitialEvents] = useState<CalendarEvent[]>([])
-  // console.log(initialEvents)
+  console.log(initialEvents)
 
   useEffect(() => {
     async function getAllEv() {
-      const data = await getAllEvents()
+      const events = await getAllEvents()
+      const tasks = await getAllTasks()
+      const data = events.concat(tasks);
       setInitialEvents(data)
       return
     }

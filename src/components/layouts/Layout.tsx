@@ -18,7 +18,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
             <div className="col-span-1">
                 <Sidebar/>
             </div>
-            <main className="min-h-[calc(100vh-80px)] col-span-3">{children ? children : <Outlet />}</main>
+            <main className="min-h-[calc(100vh)] col-span-3">{children ? children : <Outlet />}</main>
         </div>
       </div>
       <Footer />

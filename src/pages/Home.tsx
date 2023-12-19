@@ -148,7 +148,7 @@ function Home() {
   };
 
   const calendarOptions = {
-    // height:"700px",
+    height:"700px",
     view: type,
     week: {
       startDayOfWeek: 1,

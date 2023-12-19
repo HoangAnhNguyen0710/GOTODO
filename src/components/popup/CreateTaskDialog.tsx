@@ -89,103 +89,117 @@ export default function CreateTaskDialog({
           </span>
         </div>
         <FormGroup onSubmit={handleSubmitForm}>
-          <div className="min-w-[420px] min-h-[480px] h-fit w-fit">
+        <div className="min-w-[420px] min-h-[480px] h-fit w-fit mx-5 my-3">
             <div className="flex items-center justify-center flex-col">
-              <div className="flex items-center justify-between w-full">
-                <TextField
-                  variant="outlined"
-                  label="Ten task"
-                  name="title"
-                  value={task.title}
-                  onChange={(ev: any) => handleChangeEvent(ev)}
-                />
-                <FormControl sx={{ m: 1, minWidth: 120 }} size="medium">
-                  <InputLabel id="demo-select-small-label">
-                    Do uu tien
-                  </InputLabel>
-                  <Select
-                    labelId="demo-select-small-label"
-                    id="demo-select-small"
-                    label="Do uu tien"
-                    name="priority"
-                    value={task.priority}
-                    onChange={(ev: any) =>
-                      setTask({ ...task, priority: ev.target.value })
-                    }
-                  >
-                    <MenuItem value={1}>
-                      <CircleIcon color="error" />
-                    </MenuItem>
-                    <MenuItem value={2}>
-                      <CircleIcon color="warning" />
-                    </MenuItem>
-                    <MenuItem value={3}>
-                      <CircleIcon color="success" />
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-                <Button
-                  variant="outlined"
-                  color="inherit"
-                  size="large"
-                  sx={{ py: 2 }}
-                >
-                  <NotificationsIcon />
-                </Button>
+              <div className="flex items-center grid grid-cols-4 justify-between w-full">
+                <div className="col-span-3">
+                  <label htmlFor="first-name" className="block uppercase tracking-wide text-gray-700 text-md font-bold mb-2">
+                    Tên nhiệm vụ *
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      name="title"
+                      id="title"
+                      autoComplete="given-name"
+                      onChange={(ev: any) => handleChangeEvent(ev)}
+                      value={task.title}
+                      required
+                      className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    />
+                  </div>
+                </div>
+                <div className="col-span-1 grid justify-items-end">
+                  <NotificationsIcon className="text-xl"/>
+                </div>
               </div>
-              <div className="py-3 w-full flex ">
-                <DatePicker
-                  value={endDate}
-                  onChange={(value) => setEndDate(value)}
-                  label="End Date"
-                  slotProps={{
-                    // Targets the `IconButton` component.
-                    openPickerButton: {
-                      color: "primary",
-                    },
-                    openPickerIcon: CalendarMonthIcon,
-                    // Targets the `InputAdornment` component.
-                    inputAdornment: {
-                      position: "start",
-                    },
-                  }}
-                />
-                <TimePicker
-                  value={endTime}
-                  onChange={(value) => setEndTime(value ? value : dayjs(0))}
-                  label="End time"
-                  sx={{ width: "fit-content", ml: 2 }}
-                />
+              <div className="flex items-center justify-between w-full mt-4">
+                <div>
+                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="projectid">
+                    Loại công việc
+                  </label>
+                  <div className="relative">
+                    <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="project-id">
+                      <option>Công việc trên trường</option>
+                      <option>Việc tại công ty</option>
+                      <option>Vui chơi giải trí</option>
+                      <option>Tự học</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="priority">
+                    Độ ưu tiên
+                  </label>
+                  <div className="relative">
+                    <select 
+                      className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                      id="priority"
+                      value={task.priority}
+                      onChange={(ev: any) =>  setTask({ ...task, priority: ev.target.value })}
+                      >
+                      <option value={0}>Thấp</option>
+                      <option value={1}>Trung bình</option>
+                      <option value={2}>Cao</option>
+                      <option value={3}>Rất cao</option>
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="py-3 w-full flex gap-4">
+                <div>
+                  <label htmlFor="first-name" className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    Ngày kết thúc
+                  </label>
+                  <DatePicker
+                    value={endDate}
+                    onChange={(value) => setEndDate(value)}
+                    slotProps={{
+                      // Targets the `IconButton` component.
+                      openPickerButton: {
+                        color: "primary",
+                      },
+                      openPickerIcon: CalendarMonthIcon,
+                      // Targets the `InputAdornment` component.
+                      inputAdornment: {
+                        position: "start",
+                      },
+                    }}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="first-name" className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                    Thời gian kết thúc
+                  </label>
+                  <TimePicker
+                    value={endTime}
+                    onChange={(value) => setEndTime(value ? value : dayjs(0))}
+                    sx={{ width: "fit-content",}}
+                  />
+                </div>
               </div>
               <div className="py-3 w-full">
-                <TextField
-                  variant="outlined"
-                  label="Mo ta"
+                <label htmlFor="first-name" className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  Mô tả sự kiện
+                </label>
+                <textarea
+                  id="description"
                   name="description"
-                  value={task.description}
-                  onChange={(ev: any) => handleChangeEvent(ev)}
-                  multiline
-                  fullWidth
                   rows={4}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment
-                        position="start"
-                        sx={{ position: "relative" }}
-                      >
-                        <CreateIcon />
-                      </InputAdornment>
-                    ),
-                  }}
+                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  defaultValue={''}
+                  onChange={(ev: any) => handleChangeEvent(ev)}
                 />
               </div>
               <div>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  onClick={handleSubmitForm}
-                >
-                  Create Task
+                <Button type="submit" variant="contained" onClick={handleSubmitForm}>
+                  Tạo nhiệm vụ mới
                 </Button>
               </div>
             </div>

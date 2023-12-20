@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./user.reducer";
+import taskReducer from "./task.reducer";
 
 export const store = configureStore({
   reducer: {
     // Ten thuoc tinh duoi day de dat ten cho state store name
     user: userReducer,
+    taskFilter: taskReducer
   },
 });
 

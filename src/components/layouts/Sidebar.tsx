@@ -9,34 +9,51 @@ import { CaretDownOutlined } from "@ant-design/icons";
 import CreateEventDialog from "../popup/CreateEventDialog";
 import CreateTaskDialog from "../popup/CreateTaskDialog";
 import { getDailyTasks } from "../../services/Task";
-import { Task } from '../models/tasks';
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { setTaskFilter } from "../../redux/task.reducer";
+import { RootState } from "../../redux/store";
 
 export interface Items {
-  id: number,
+  id: string,
   text: string
 }
 
-const items: Items[] = [{id: 1, text:'Công việc 1'}, {id: 2, text:'Công việc 2'}]
+const items: Items[] = [{id: '1', text:'Công việc trên trường'}, {id: '2', text:'Việc tại công ty'}, {id: '3', text:'Vui chơi giải trí'}, {id: '4', text:'Tự học'}]
 
 const Sidebar = () => {
+  const dispatch = useDispatch()
   const [state, setState] = useState<number>(1);
   const [dropDown, setDropDown] = useState<boolean>(false)
   const [numtodayTasks, setNumTodayTasks] = useState<number>()
-  const [today, setToday] = useState<String>()
+  const [today, setToday] = useState<string>('')
   const [isOpenEventDialog, setOpenEventDialog] = useState<boolean>(false)
   const [isOpenTaskDialog, setOpenTaskDialog] = useState<boolean>(false)
 
+  const [selectedTaskType, setSelectedTaskType] = useState<Array<string>>(['1', '2', '3', '4'])
+  const handleSelectTaskType = (typeNum: string) => {
+    if(selectedTaskType.includes(typeNum)) {
+      const updateTaskType = selectedTaskType.filter((value) => value != typeNum)
+      setSelectedTaskType(updateTaskType)
+      dispatch(setTaskFilter(selectedTaskType))
+    }
+    else {
+      setSelectedTaskType([...selectedTaskType, typeNum])
+      dispatch(setTaskFilter([...selectedTaskType, typeNum]))
+    }
+  }
   useEffect(() => {
     async function getTodayTasks() {
       const today = new Date();
-      const data = await getDailyTasks(today)
+      const data = await getDailyTasks(today, selectedTaskType)
       console.log(data)
       setToday(moment(today).format("YYYY/MM/DD"))
       setNumTodayTasks(data.length)
     }
     getTodayTasks()
-  }, [])
+    dispatch(setTaskFilter(selectedTaskType))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTaskType])
 
   const padWithLeadingZeros = (num, totalLength) => {
     return String(num).padStart(totalLength, '0');
@@ -143,7 +160,7 @@ const Sidebar = () => {
             </div>
               { dropDown? items.map(item =>
                 <div className="text-zinc-400 my-2" key={item.id}>
-                  <Checkbox  defaultChecked />
+                  <Checkbox  defaultChecked value={item.id} onChange={() => handleSelectTaskType(item.id)}/>
                   {item.text}
                 </div>
                 ) : <></>

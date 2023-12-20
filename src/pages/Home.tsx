@@ -57,7 +57,6 @@ function Home() {
   const [event, setEvent] = useState<CalendarEvent>();
   const calendarRef = React.useRef<any>();
   const [initialEvents, setInitialEvents] = useState<CalendarEvent[]>([])
-  console.log(initialEvents)
 
   useEffect(() => {
     async function getAllEv() {

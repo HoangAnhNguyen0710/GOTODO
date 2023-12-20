@@ -8,6 +8,8 @@ import "moment/locale/vi";
 import { Task } from '../models/tasks';
 import { EventDialog } from "../components";
 import { CalendarEvent } from "./Home";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Todo = () => {
   const [todayTasks, setTodayTasks] = useState<Array<Task>>([])
@@ -16,24 +18,28 @@ const Todo = () => {
   const [pastdueDropDown, setPastdueDropDown] = useState<boolean>(true)
   const [todayDropDown, setTodayDropDown] = useState<boolean>(true)
   const [event, setEvent] = useState<CalendarEvent>();
-
+  const taskFilter = useSelector((state: RootState) => state.taskFilter.value )
+  console.log(taskFilter)
   useEffect(() => {
     async function getTodayTasks() {
       const today = new Date();
-      const data = await getDailyTasks(today)
+      const data = await getDailyTasks(today, taskFilter)
       console.log(data)
       setTodayTasks(data as Array<Task>)
     }
     getTodayTasks()
     async function getPassdueTasks() {
       const today = new Date();
-      const data = await getPassDueTasks(today)
+      const data = await getPassDueTasks(today, taskFilter)
       console.log(data)
       setPastdueTasks(data as Array<Task>)
     }
     getPassdueTasks()
-  }, [])
+  }, [taskFilter])
   
+  useEffect(() => {
+    console.log(taskFilter)
+  }, [taskFilter])
   const changePastdueDropDown = () => {    
     setPastdueDropDown(!pastdueDropDown);
   };

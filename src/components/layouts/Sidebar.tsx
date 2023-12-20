@@ -1,6 +1,6 @@
 
 import { Checkbox } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { SlCalender } from "react-icons/sl";
 import { FaTasks } from "react-icons/fa";
@@ -8,6 +8,9 @@ import { Button } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import CreateEventDialog from "../popup/CreateEventDialog";
 import CreateTaskDialog from "../popup/CreateTaskDialog";
+import { getDailyTasks } from "../../services/Task";
+import { Task } from '../models/tasks';
+import moment from "moment";
 
 export interface Items {
   id: number,
@@ -19,9 +22,25 @@ const items: Items[] = [{id: 1, text:'C么ng vi峄嘽 1'}, {id: 2, text:'C么ng vi峄
 const Sidebar = () => {
   const [state, setState] = useState<number>(1);
   const [dropDown, setDropDown] = useState<boolean>(false)
-
+  const [numtodayTasks, setNumTodayTasks] = useState<number>()
+  const [today, setToday] = useState<String>()
   const [isOpenEventDialog, setOpenEventDialog] = useState<boolean>(false)
   const [isOpenTaskDialog, setOpenTaskDialog] = useState<boolean>(false)
+
+  useEffect(() => {
+    async function getTodayTasks() {
+      const today = new Date();
+      const data = await getDailyTasks(today)
+      console.log(data)
+      setToday(moment(today).format("YYYY/MM/DD"))
+      setNumTodayTasks(data.length)
+    }
+    getTodayTasks()
+  }, [])
+
+  const padWithLeadingZeros = (num, totalLength) => {
+    return String(num).padStart(totalLength, '0');
+  }
 
   const handleOpenTaskDialog = () => {
     setOpenTaskDialog(true)
@@ -51,13 +70,13 @@ const Sidebar = () => {
           <div className="  flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
               <div className=" flex items-center">
                   <img src="https://cdn-icons-png.flaticon.com/512/10691/10691802.png" className="mr-3 h-10 sm:h-10" alt="Gotodo Logo" />
-                  <span className="self-center text-2xl font-bold whitespace-nowrap text-black">Go<span className="text-rose-700">todo</span></span>
+                  <span className="self-center text-3xl font-bold whitespace-nowrap text-black">Go<span className="text-rose-700">todo</span></span>
               </div>
           </div>
           <div className=" flex flex-col items-center justify-center flex-shrink-0 py-2 my-2">
             <a href="#">
               <img
-                className="border-solid border-5 border-indigo-600 rounded-full h-28 w-24 mb-2"
+                className="border-solid border-5 border-indigo-600 rounded-full h-24 w-22 mb-2"
                 src="https://static.vecteezy.com/system/resources/previews/028/597/534/original/young-cartoon-female-avatar-student-character-wearing-eyeglasses-file-no-background-ai-generated-png.png"
                 alt="K-UI"
               />
@@ -74,14 +93,14 @@ const Sidebar = () => {
               <tbody>
                 <tr>
                   <td className="w-28 h-24 text-center text-6xl font-bold text-rose-600">
-                    01
+                    {padWithLeadingZeros(numtodayTasks, 2)}
                   </td>
                   <td className="text-base font-semibold">
                     <tr>
                       C么ng vi峄嘽 trong ng脿y h么m nay
                     </tr>
                     <tr className="text-red-600 font-semibold">
-                        12/12/2023   
+                        {today}   
                     </tr>
                   </td>
                 </tr>
@@ -105,14 +124,14 @@ const Sidebar = () => {
 
           <div className="px-8 text-center flex flex-row items-center justify-center">
             <Link to="/Todo" className="" onClick={() => changeState(0)}>
-            <Button  className={state === 0 ? "bg-white w-48 h-48 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-40 h-40 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
-                <FaTasks className="text-3xl mt-8 mb-2"/>
+            <Button  className={state === 0 ? "bg-white w-44 h-44 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-40 h-40 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
+                <FaTasks className="text-4xl mt-12 mb-2"/>
                 <span> Todo </span>
               </Button>
             </Link>
             <Link to="/" className="ml-2" onClick={() => changeState(1)}>
-              <Button className={state === 1 ? "bg-white w-48 h-48 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-40 h-40 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
-                <SlCalender className="text-3xl mt-8 mb-2"/>
+              <Button className={state === 1 ? "bg-white w-44 h-44 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-40 h-40 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
+                <SlCalender className="text-4xl mt-12 mb-2"/>
                 <span> Calender </span>
               </Button>
             </Link>

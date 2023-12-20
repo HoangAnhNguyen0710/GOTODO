@@ -7,7 +7,7 @@ interface IEventDialogProps extends DialogProps {
   event: CalendarEvent;
 }
 
-const PRIORITIES = ["Thấp", "Trung bình", "Cao","Rất cao"];
+const PRIORITIES = ["Thấp", "Trung bình", "Cao", "Rất cao"];
 
 const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
   open,

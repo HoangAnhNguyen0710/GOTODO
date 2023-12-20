@@ -19,7 +19,6 @@ const Todo = () => {
   const [todayDropDown, setTodayDropDown] = useState<boolean>(true)
   const [event, setEvent] = useState<CalendarEvent>();
   const taskFilter = useSelector((state: RootState) => state.taskFilter.value )
-
   useEffect(() => {
     async function getTodayTasks() {
       const today = new Date();
@@ -36,7 +35,6 @@ const Todo = () => {
     }
     getPassdueTasks()
   }, [taskFilter])
-
   const changePastdueDropDown = () => {    
     setPastdueDropDown(!pastdueDropDown);
   };

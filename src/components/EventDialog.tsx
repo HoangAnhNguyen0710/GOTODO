@@ -8,6 +8,7 @@ interface IEventDialogProps extends DialogProps {
 }
 
 const PRIORITIES = ["Thấp", "Trung bình", "Cao", "Rất cao"];
+const items = ['Công việc trên trường', 'Việc tại công ty', 'Vui chơi giải trí', 'Tự học']
 
 const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
   open,
@@ -48,7 +49,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
           <div className="project flex mt-3">
             <div className="project-span w-10 h-5.5 bg-orange-600 rounded-md mr-2"></div>
             <h4 className="font-semibold text-orange-600 text-sm">
-              Loại công việc 3
+              {items[event.calendarId - 1]}
             </h4>
           </div>
           <div className="description py-2 mr-2 mt-8">

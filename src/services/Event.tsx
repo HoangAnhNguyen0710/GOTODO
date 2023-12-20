@@ -95,6 +95,8 @@ export async function updateTask(
       });
   }
 
+  const color = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
+
 export function convertToCalendarEvents(events: Array<Event>) {
 
   const convertedList: Array<CalendarEvent> = []
@@ -112,6 +114,7 @@ export function convertToCalendarEvents(events: Array<Event>) {
       raw: {
         priority: value.priority
       },
+      backgroundColor: color[value.priority],
       state: 'state here'
     }
 

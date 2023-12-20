@@ -23,7 +23,7 @@ export interface CalendarEvent {
   end?: string;
   due_at?: string;
   is_done?: boolean;
-  bgColor?: string;
+  backgroundColor?: string;
   color?: string;
   body?: string;
   raw?: {

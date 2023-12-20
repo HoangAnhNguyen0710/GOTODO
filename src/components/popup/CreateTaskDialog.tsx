@@ -25,12 +25,13 @@ export interface CreateEventFormProps {
   handleClose: () => void;
 }
 
-const initialTaskData = {
+const initialTaskData:Task = {
   id: "",
   title: "",
   description: "",
   due_at: "",
-  priority: 1,
+  priority: 0,
+  project_id: 1,
   is_done: false,
 };
 

@@ -26,13 +26,14 @@ export interface CreateEventFormProps {
   handleClose: () => void;
 }
 
-const initialEventData = {
+const initialEventData:Event = {
   id: "",
   title: "",
   description: "",
   started_at: "",
   ended_at: "",
-  priority: 1,
+  priority: 0,
+  project_id: 1,
   location: "",
 }
 
@@ -50,7 +51,6 @@ export default function CreateEventDialog({
   const [errorMessage, setErrorMessage] = useState<string>('')
   const handleChangeEvent = (ev: FormEvent<HTMLInputElement> | FormEvent<HTMLSelectElement> | any) => {
     setEvent({...event, [ev.currentTarget.name]: ev.currentTarget.value})
-    console.log(ev.currentTarget.name, ev.currentTarget.value)
   }
 
   const validateEvent = (event: Event) => {
@@ -133,11 +133,17 @@ export default function CreateEventDialog({
                     Loại công việc
                   </label>
                   <div className="relative">
-                    <select className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="project-id">
-                      <option>Công việc trên trường</option>
-                      <option>Việc tại công ty</option>
-                      <option>Vui chơi giải trí</option>
-                      <option>Tự học</option>
+                    <select 
+                      className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                      name="project-id"
+                      value={event.project_id}
+                      onChange={(ev: any) =>
+                        setEvent({ ...event, project_id: ev.target.value })
+                      }>
+                      <option value={1}>Công việc trên trường</option>
+                      <option value={2}>Việc tại công ty</option>
+                      <option value={3}>Vui chơi giải trí</option>
+                      <option value={4}>Tự học</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>

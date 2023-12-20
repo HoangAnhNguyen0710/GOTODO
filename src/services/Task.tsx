@@ -181,6 +181,8 @@ export async function getAllTasks() {
   return convertedList
 }
 
+const color = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
+
 export function convertToCalendarEvents(tasks: Array<Task>) {
 
   const convertedList: Array<CalendarEvent> = []
@@ -196,6 +198,7 @@ export function convertToCalendarEvents(tasks: Array<Task>) {
       raw: {
         priority: value.priority
       },
+      backgroundColor: color[value.priority],
       state: 'state here'
     }
 

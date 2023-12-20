@@ -2,13 +2,12 @@ import Radio from "antd/es/radio";
 import { Link } from "react-router-dom";
 import { CaretDownOutlined, CalendarOutlined, EyeOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import { getDailyTasks, getPassDueTasks } from "../services/Task";
+import { getDailyTasks, getPassDueTasks, updateTask } from "../services/Task";
 import moment from "moment";
 import "moment/locale/vi";
 import { Task } from '../models/tasks';
 import { EventDialog } from "../components";
 import { CalendarEvent } from "./Home";
-import { convertToCalendarEvents } from '../services/Event';
 
 const Todo = () => {
   const [todayTasks, setTodayTasks] = useState<Array<Task>>([])
@@ -68,6 +67,17 @@ const Todo = () => {
     setOpenModal(true);
   }
 
+  const updateTaskStatement = async (task: Task, index: number) => {
+    if(task.is_done) {
+      task.is_done = false
+    }
+    else task.is_done = true
+    const statement: boolean| void = await updateTask(task.id, task)
+    if(statement) {
+      todayTasks[index].is_done = task.is_done
+      setTodayTasks([...todayTasks])
+    }
+  }
   return (
     <React.Fragment>
       {event && (
@@ -87,12 +97,16 @@ const Todo = () => {
             <h3 className="p-2 font-bold text-lg text-red-500">Quá hạn</h3>
           </div>
           {pastdueDropDown ? (
-            pastdueTasks.map((pastdueTask: Task) => (
+            pastdueTasks.map((pastdueTask: Task, index: number) => (
               <div
                 className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
                 key={pastdueTask.id}
               >
-                <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"></button>
+                 {pastdueTask.is_done == true ? 
+                    <button className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(pastdueTask, index)}></button>
+                    : 
+                    <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(pastdueTask, index)}></button>
+                  }
                 <div className="detail-task mx-10 w-full cursor-pointer"
                   onClick={() => handleClickTask(pastdueTask)}
                 >
@@ -123,15 +137,15 @@ const Todo = () => {
             </h3>
           </div>
           {todayDropDown ? (
-            todayTasks.map((todayTask: Task) => (
+            todayTasks.map((todayTask: Task, index: number) => (
               <div
                 className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
                 key={todayTask.id}
               >
                   {todayTask.is_done == true ? 
-                    <button className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"></button>
+                    <button className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(todayTask, index)}></button>
                     : 
-                    <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"></button>
+                    <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(todayTask, index)}></button>
                   }
                 <div className="detail-task mx-10 w-full cursor-pointer"
                   onClick={() => handleClickTask(todayTask)}

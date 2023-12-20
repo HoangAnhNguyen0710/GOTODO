@@ -154,18 +154,18 @@ export async function getPassDueTasks(Day: Date) {
 export async function updateTask(
   docId: string | undefined,
   task: Task,
-) {
-    const updatedData = await firestore.collection("Tasks").doc(docId);
+): Promise<boolean | void>{
 
-    updatedData
+    return await firestore.collection("Tasks").doc(docId)
     .update(task)
     .then(() => {
       console.log("Update task successfully!");
+      return true
     })
     .catch((error) => {
       console.error("Update task failed!", error);
+      return false
     });
-
   }
   
 export async function getAllTasks() {

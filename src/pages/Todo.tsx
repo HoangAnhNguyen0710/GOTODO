@@ -19,7 +19,6 @@ const Todo = () => {
   const [todayDropDown, setTodayDropDown] = useState<boolean>(true)
   const [event, setEvent] = useState<CalendarEvent>();
   const taskFilter = useSelector((state: RootState) => state.taskFilter.value )
-  console.log(taskFilter)
   useEffect(() => {
     async function getTodayTasks() {
       const today = new Date();
@@ -35,10 +34,6 @@ const Todo = () => {
       setPastdueTasks(data as Array<Task>)
     }
     getPassdueTasks()
-  }, [taskFilter])
-  
-  useEffect(() => {
-    console.log(taskFilter)
   }, [taskFilter])
   const changePastdueDropDown = () => {    
     setPastdueDropDown(!pastdueDropDown);
@@ -73,7 +68,7 @@ const Todo = () => {
     setOpenModal(true);
   }
 
-  const updateTaskStatement = async (task: Task, index: number) => {
+  const updateTodayTaskStatement = async (task: Task, index: number) => {
     if(task.is_done) {
       task.is_done = false
     }
@@ -82,6 +77,17 @@ const Todo = () => {
     if(statement) {
       todayTasks[index].is_done = task.is_done
       setTodayTasks([...todayTasks])
+    }
+  }
+  const updatePastdueTaskStatement = async (task: Task, index: number) => {
+    if(task.is_done) {
+      task.is_done = false
+    }
+    else task.is_done = true
+    const statement: boolean| void = await updateTask(task.id, task)
+    if(statement) {
+      pastdueTasks[index].is_done = task.is_done
+      setPastdueTasks([...pastdueTasks])
     }
   }
   return (
@@ -109,9 +115,9 @@ const Todo = () => {
                 key={pastdueTask.id}
               >
                  {pastdueTask.is_done == true ? 
-                    <button className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(pastdueTask, index)}></button>
+                    <button className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updatePastdueTaskStatement(pastdueTask, index)}></button>
                     : 
-                    <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(pastdueTask, index)}></button>
+                    <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updatePastdueTaskStatement(pastdueTask, index)}></button>
                   }
                 <div className="detail-task mx-10 w-full cursor-pointer"
                   onClick={() => handleClickTask(pastdueTask)}
@@ -149,9 +155,9 @@ const Todo = () => {
                 key={todayTask.id}
               >
                   {todayTask.is_done == true ? 
-                    <button className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(todayTask, index)}></button>
+                    <button className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTodayTaskStatement(todayTask, index)}></button>
                     : 
-                    <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTaskStatement(todayTask, index)}></button>
+                    <button className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute" onClick={()=>updateTodayTaskStatement(todayTask, index)}></button>
                   }
                 <div className="detail-task mx-10 w-full cursor-pointer"
                   onClick={() => handleClickTask(todayTask)}

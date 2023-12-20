@@ -48,7 +48,6 @@ export default function CreateTaskDialog({
   };
 
   const validateTask = (task: Task) => {
-    console.log(errorMessage);
     const currentTime = new Date().toISOString();
     if (task.title === "") {
       setErrorMessage("Chua nhap ten task");

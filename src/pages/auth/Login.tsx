@@ -27,7 +27,6 @@ const Login = (): JSX.Element => {
     setLoading(true);
     login(username, password)
       .then((user) => {
-        // console.log(user);
         dispatch(setCurrentUser(user));
         setMessage("ログイン成功しました。");
         setMessageType("success");

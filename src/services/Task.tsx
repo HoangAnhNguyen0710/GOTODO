@@ -42,18 +42,18 @@ export async function getTaskByDocId(docId: string) {
   }
 
 // get tasks theo ngay
-export async function getDailyTasks(Day: Date) {
+export async function getDailyTasks(Day: Date, Filter: Array<string>) {
     const start = new Date(Day)
     start.setHours(0, 0, 0)
 
     const end = new Date(Day)
     end.setHours(23, 59, 59)
 
-    console.log(start, end)
     const data = await firestore
       .collection("Tasks")
       .where("due_at", "<=", end.toISOString())
       .where("due_at", ">=", start.toISOString())
+      .where("project_id", "in", Filter)
       .get();
     return data.docs.map((item) => ({
       ...item.data(),
@@ -134,7 +134,7 @@ export async function getMontlyTasks(Day: Date) {
   }
 
 // get task qua han
-export async function getPassDueTasks(Day: Date) {
+export async function getPassDueTasks(Day: Date, Filter: Array<string>) {
     const start = new Date(Day)
     start.setHours(0, 0, 0)
 
@@ -143,6 +143,7 @@ export async function getPassDueTasks(Day: Date) {
       .collection("Tasks")
       .where("due_at", "<=", start.toISOString())
       .where("is_done", "==", f)
+      .where("project_id", "in", Filter)
       .get();
     return data.docs.map((item) => ({
       ...item.data(),
@@ -154,18 +155,18 @@ export async function getPassDueTasks(Day: Date) {
 export async function updateTask(
   docId: string | undefined,
   task: Task,
-) {
-    const updatedData = await firestore.collection("Tasks").doc(docId);
+): Promise<boolean | void>{
 
-    updatedData
+    return await firestore.collection("Tasks").doc(docId)
     .update(task)
     .then(() => {
       console.log("Update task successfully!");
+      return true
     })
     .catch((error) => {
       console.error("Update task failed!", error);
+      return false
     });
-
   }
   
 export async function getAllTasks() {

@@ -2,19 +2,11 @@ import {
   Button,
   Dialog,
   DialogContent,
-  FormControl,
   FormGroup,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { FormEvent, useState } from "react";
-import CircleIcon from "@mui/icons-material/Circle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import CreateIcon from "@mui/icons-material/Create";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { Task } from "../../models/tasks";
@@ -31,7 +23,7 @@ const initialTaskData:Task = {
   description: "",
   due_at: "",
   priority: 0,
-  project_id: 1,
+  project_id: "1",
   is_done: false,
 };
 

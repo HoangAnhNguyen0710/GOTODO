@@ -1,8 +1,6 @@
-import { Calendar } from "tui-date-picker";
 import { firestore } from "../config/firebase";
 import  Event from "../models/events";
 import { CalendarEvent } from "../pages/Home";
-import moment from "moment";
 
 // create event
 export async function createEvent(event: Event) {
@@ -64,10 +62,13 @@ export async function getEvents(StartDay: Date, EndDay: Date) {
   }
 
   // get events theo 1 khoang thoi gian nao do bat ki
-export async function getAllEvents() {
-
+export async function getAllEvents(eventFilter: Array<string>) {
+  if( eventFilter.length == 0){
+    eventFilter = ["-1"]
+  }
   const data = await firestore
     .collection("Events")
+    .where("project_id", "in", eventFilter)
     .get();
   const dataList = data.docs.map((item) => ({
     ...item.data(),

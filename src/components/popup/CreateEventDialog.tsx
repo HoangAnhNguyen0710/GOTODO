@@ -2,21 +2,12 @@ import {
   Button,
   Dialog,
   DialogContent,
-  FormControl,
   FormGroup,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
 } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
 import { FormEvent, useState } from "react";
 import Event from "../../models/events";
-import CircleIcon from "@mui/icons-material/Circle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import CreateIcon from "@mui/icons-material/Create";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { createEvent } from "../../services/Event";
@@ -33,7 +24,7 @@ const initialEventData:Event = {
   started_at: "",
   ended_at: "",
   priority: 0,
-  project_id: 1,
+  project_id: "1",
   location: "",
 }
 
@@ -140,10 +131,10 @@ export default function CreateEventDialog({
                       onChange={(ev: any) =>
                         setEvent({ ...event, project_id: ev.target.value })
                       }>
-                      <option value={1}>Công việc trên trường</option>
-                      <option value={2}>Việc tại công ty</option>
-                      <option value={3}>Vui chơi giải trí</option>
-                      <option value={4}>Tự học</option>
+                      <option value={"1"}>Công việc trên trường</option>
+                      <option value={"2"}>Việc tại công ty</option>
+                      <option value={"3"}>Vui chơi giải trí</option>
+                      <option value={"4"}>Tự học</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>

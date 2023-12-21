@@ -9,6 +9,8 @@ import "tui-time-picker/dist/tui-time-picker.css";
 import { EventDialog } from "../components";
 import { getAllEvents } from "../services/Event";
 import { getAllTasks } from "../services/Task";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export interface CalendarEvent {
   id: string;
@@ -55,17 +57,18 @@ function Home() {
   const [event, setEvent] = useState<CalendarEvent>();
   const calendarRef = React.useRef<any>();
   const [initialEvents, setInitialEvents] = useState<CalendarEvent[]>([])
+  const eventFilter = useSelector((state: RootState) => state.taskFilter.value)
 
   useEffect(() => {
     async function getAllEv() {
-      const events = await getAllEvents()
-      const tasks = await getAllTasks()
+      const events = await getAllEvents(eventFilter)
+      const tasks = await getAllTasks(eventFilter)
       const data = events.concat(tasks);
       setInitialEvents(data)
       return
     }
     getAllEv()
-  }, [])
+  }, [eventFilter])
   const theme = {
     week: {
       nowIndicatorLabel: {

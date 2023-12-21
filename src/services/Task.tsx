@@ -47,7 +47,7 @@ export async function getDailyTasks(Day: Date, Filter: Array<string>) {
       Filter = ["-1"]
     }
     const start = new Date(Day)
-    start.setHours(0, 0, 0)
+    // start.setHours(0, 0, 0)
 
     const end = new Date(Day)
     end.setHours(23, 59, 59)
@@ -160,7 +160,7 @@ export async function getPassDueTasks(Day: Date, Filter: Array<string>) {
       Filter = ["-1"]
     }
     const start = new Date(Day)
-    start.setHours(0, 0, 0)
+    // start.setHours(0, 0, 0)
 
     const f = false
     const data = await firestore
@@ -169,10 +169,14 @@ export async function getPassDueTasks(Day: Date, Filter: Array<string>) {
       .where("is_done", "==", f)
       .where("project_id", "in", Filter)
       .get();
+    console.log(data.docs.map((item) => ({
+      ...item.data(),
+      // docId: item.id,
+    })), start.toISOString())
     return data.docs.map((item) => ({
       ...item.data(),
       // docId: item.id,
-    }));
+    }))
   }
 
 // update task

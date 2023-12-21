@@ -125,10 +125,10 @@ export default function CreateTaskDialog({
                         setTask({ ...task, project_id: ev.target.value })
                       }
                     >
-                      <option value={1}>Công việc trên trường</option>
-                      <option value={2}>Việc tại công ty</option>
-                      <option value={3}>Vui chơi giải trí</option>
-                      <option value={4}>Tự học</option>
+                      <option value={"1"}>Công việc trên trường</option>
+                      <option value={"2"}>Việc tại công ty</option>
+                      <option value={"3"}>Vui chơi giải trí</option>
+                      <option value={"4"}>Tự học</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       <svg

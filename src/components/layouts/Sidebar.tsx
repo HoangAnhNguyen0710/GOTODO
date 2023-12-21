@@ -8,7 +8,7 @@ import { Button } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import CreateEventDialog from "../popup/CreateEventDialog";
 import CreateTaskDialog from "../popup/CreateTaskDialog";
-import { getDailyTasks, getDailyTasksNum } from "../../services/Task";
+import { getDailyTasksNum } from "../../services/Task";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setTaskFilter } from "../../redux/task.reducer";
@@ -29,17 +29,15 @@ const Sidebar = () => {
   const [today, setToday] = useState<string>('')
   const [isOpenEventDialog, setOpenEventDialog] = useState<boolean>(false)
   const [isOpenTaskDialog, setOpenTaskDialog] = useState<boolean>(false)
+  const taskFilter = useSelector((state: RootState) => state.taskFilter.value)
 
-  const [selectedTaskType, setSelectedTaskType] = useState<Array<string>>(['1', '2', '3', '4'])
   const handleSelectTaskType = (typeNum: string) => {
-    if(selectedTaskType.includes(typeNum)) {
-      const updateTaskType = selectedTaskType.filter((value) => value != typeNum)
-      setSelectedTaskType(updateTaskType)
-      dispatch(setTaskFilter(selectedTaskType))
+    if(taskFilter.includes(typeNum)) {
+      const updateTaskType = taskFilter.filter((value) => value != typeNum)
+      dispatch(setTaskFilter(updateTaskType))
     }
     else {
-      setSelectedTaskType([...selectedTaskType, typeNum])
-      dispatch(setTaskFilter([...selectedTaskType, typeNum]))
+      dispatch(setTaskFilter([...taskFilter, typeNum]))
     }
   }
   useEffect(() => {
@@ -50,7 +48,6 @@ const Sidebar = () => {
       setNumTodayTasks(data.length)
     }
     getTodayTasksNum()
-    dispatch(setTaskFilter(selectedTaskType))
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

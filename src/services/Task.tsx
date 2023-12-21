@@ -43,6 +43,9 @@ export async function getTaskByDocId(docId: string) {
 
 // get tasks theo ngay
 export async function getDailyTasks(Day: Date, Filter: Array<string>) {
+    if( Filter.length == 0){
+      Filter = ["-1"]
+    }
     const start = new Date(Day)
     start.setHours(0, 0, 0)
 
@@ -153,6 +156,9 @@ export async function getMontlyTasks(Day: Date) {
 
 // get task qua han
 export async function getPassDueTasks(Day: Date, Filter: Array<string>) {
+    if( Filter.length == 0){
+      Filter = ["-1"]
+    }
     const start = new Date(Day)
     start.setHours(0, 0, 0)
 
@@ -187,9 +193,13 @@ export async function updateTask(
     });
   }
   
-export async function getAllTasks() {
+export async function getAllTasks(taskFilter: Array<string>) {
+  if( taskFilter.length == 0){
+    taskFilter = ["-1"]
+  }
   const data = await firestore
     .collection("Tasks")
+    .where("project_id", "in", taskFilter)
     .get();
   const dataList = data.docs.map((item) => ({
     ...item.data(),

@@ -1,6 +1,6 @@
 export interface Task {
     id: string,
-    project_id?: number,
+    project_id?: string,
     due_at: string,
     title: string,
     priority: number,

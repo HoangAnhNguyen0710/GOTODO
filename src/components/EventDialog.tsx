@@ -49,7 +49,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
           <div className="project flex mt-3">
             <div className="project-span w-10 h-5.5 bg-orange-600 rounded-md mr-2"></div>
             <h4 className="font-semibold text-orange-600 text-sm">
-              {items[event.calendarId - 1]}
+              {items[Number(event.calendarId) - 1]}
             </h4>
           </div>
           <div className="description py-2 mr-2 mt-8">
@@ -71,7 +71,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
               Độ ưu tiên
             </div>
             <p className="text-orange-600 font-semibold">
-              {raw?.priority && PRIORITIES[raw.priority]}
+              {raw?.priority && PRIORITIES[Number(raw.priority)]}
             </p>
           </div>
           { location && 

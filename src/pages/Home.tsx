@@ -20,7 +20,7 @@ export interface CalendarEvent {
   location?: string,
   dueDateClass?: string;
   start?: string;
-  end?: string;
+  end: string;
   due_at?: string;
   is_done?: boolean;
   backgroundColor?: string;

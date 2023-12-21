@@ -8,7 +8,7 @@ import { Button } from "antd";
 import { CaretDownOutlined } from "@ant-design/icons";
 import CreateEventDialog from "../popup/CreateEventDialog";
 import CreateTaskDialog from "../popup/CreateTaskDialog";
-import { getDailyTasks } from "../../services/Task";
+import { getDailyTasks, getDailyTasksNum } from "../../services/Task";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { setTaskFilter } from "../../redux/task.reducer";
@@ -43,17 +43,16 @@ const Sidebar = () => {
     }
   }
   useEffect(() => {
-    async function getTodayTasks() {
+    async function getTodayTasksNum() {
       const today = new Date();
-      const data = await getDailyTasks(today, selectedTaskType)
-      console.log(data)
+      const data = await getDailyTasksNum(today)
       setToday(moment(today).format("YYYY/MM/DD"))
       setNumTodayTasks(data.length)
     }
-    getTodayTasks()
+    getTodayTasksNum()
     dispatch(setTaskFilter(selectedTaskType))
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTaskType])
+  }, [])
 
   const padWithLeadingZeros = (num, totalLength) => {
     return String(num).padStart(totalLength, '0');

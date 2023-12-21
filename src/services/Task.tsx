@@ -61,6 +61,24 @@ export async function getDailyTasks(Day: Date, Filter: Array<string>) {
     }));
   }
 
+  export async function getDailyTasksNum(Day: Date) {
+    const start = new Date(Day)
+    start.setHours(0, 0, 0)
+
+    const end = new Date(Day)
+    end.setHours(23, 59, 59)
+
+    const data = await firestore
+      .collection("Tasks")
+      .where("due_at", "<=", end.toISOString())
+      .where("due_at", ">=", start.toISOString())
+      .get();
+    return data.docs.map((item) => ({
+      ...item.data(),
+      // docId: item.id,
+    }));
+  }
+
 // get task theo tuan
 export async function getWeeklyTasks(Day: Date) {
     

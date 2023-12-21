@@ -7,10 +7,8 @@ import { Outlet } from "react-router-dom";
 import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import { EventDialog } from "../components";
-import { createEvent, getAllEvents } from "../services/Event";
+import { getAllEvents } from "../services/Event";
 import { getAllTasks } from "../services/Task";
-import Event from "../models/events";
-import { useGetAllEvents } from "../hooks/useGetAllEvents";
 
 export interface CalendarEvent {
   id: string;

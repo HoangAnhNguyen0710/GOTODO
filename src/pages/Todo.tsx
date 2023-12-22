@@ -1,5 +1,3 @@
-import Radio from "antd/es/radio";
-import { Link } from "react-router-dom";
 import { CaretDownOutlined, CalendarOutlined, EyeOutlined } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import { getDailyTasks, getPassDueTasks, updateTask } from "../services/Task";
@@ -22,16 +20,26 @@ const Todo = () => {
   useEffect(() => {
     async function getTodayTasks() {
       const today = new Date();
-      const data = await getDailyTasks(today, taskFilter)
-      console.log(data)
-      setTodayTasks(data as Array<Task>)
+      await (await getDailyTasks(today, taskFilter)).onSnapshot((data) =>
+      {
+        const dataList = data.docs.map((item) => ({
+          ...item.data(),
+        }));
+        setTodayTasks(dataList as Array<Task>)
+      }
+    )
     }
     getTodayTasks()
     async function getPassdueTasks() {
       const today = new Date();
-      const data = await getPassDueTasks(today, taskFilter)
-      console.log(data)
-      setPastdueTasks(data as Array<Task>)
+      await (await getPassDueTasks(today, taskFilter)).onSnapshot((data) =>
+      {
+        const dataList = data.docs.map((item) => ({
+          ...item.data(),
+        }));
+        setPastdueTasks(dataList as Array<Task>)
+      }
+    )
     }
     getPassdueTasks()
   }, [taskFilter])

@@ -8,9 +8,12 @@ import "tui-date-picker/dist/tui-date-picker.css";
 import "tui-time-picker/dist/tui-time-picker.css";
 import { EventDialog } from "../components";
 import { getAllEvents } from "../services/Event";
-import { getAllTasks } from "../services/Task";
+import { convertToCalendarEvents, getAllTasks } from "../services/Task";
+import { convertEventToCalendarEvents } from "../services/Event";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { Task } from "../models/tasks";
+import Event from "../models/events";
 
 export interface CalendarEvent {
   id: string;
@@ -57,14 +60,25 @@ function Home() {
   const [event, setEvent] = useState<CalendarEvent>();
   const calendarRef = React.useRef<any>();
   const [initialEvents, setInitialEvents] = useState<CalendarEvent[]>([])
+  const [initialTasks, setInitialTasks] = useState<CalendarEvent[]>([])
   const eventFilter = useSelector((state: RootState) => state.taskFilter.value)
 
   useEffect(() => {
     async function getAllEv() {
-      const events = await getAllEvents(eventFilter)
-      const tasks = await getAllTasks(eventFilter)
-      const data = events.concat(tasks);
-      setInitialEvents(data)
+      (await getAllTasks(eventFilter)).onSnapshot((data) => {
+        const dataList = data.docs.map((item) => ({
+          ...item.data(),
+        }));
+        const convertedList = convertToCalendarEvents(dataList as Array<Task>);
+        setInitialTasks(convertedList);
+      })
+      await (await getAllEvents(eventFilter)).onSnapshot((data) => {
+        const dataList = data.docs.map((item) => ({
+          ...item.data(),
+        }));
+        const convertedList = convertEventToCalendarEvents(dataList as Array<Event>);
+        setInitialEvents(convertedList);
+      })
       return
     }
     getAllEv()
@@ -191,7 +205,7 @@ function Home() {
     },
     useDetailPopup: false,
     useFormPopup: false,
-    events: initialEvents,
+    events: initialEvents.concat(initialTasks),
     gridSelection: false,
     calendars: calendars,
     theme: theme,

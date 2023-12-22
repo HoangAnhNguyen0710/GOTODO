@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   FormGroup,
+  TextField,
 } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
 import { FormEvent, useState } from "react";
@@ -102,7 +103,8 @@ export default function CreateEventDialog({
                     Tên sự kiện *
                   </label>
                   <div className="mt-2">
-                    <input
+                    <TextField
+                      size="small"
                       type="text"
                       name="title"
                       id="title"
@@ -110,7 +112,7 @@ export default function CreateEventDialog({
                       onChange={(ev: any) => handleChangeEvent(ev)}
                       value={event.title}
                       required
-                      className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      className="appearance-none block w-full bg-white text-gray-700 border border-gray rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     />
                   </div>
                 </div>
@@ -125,7 +127,7 @@ export default function CreateEventDialog({
                   </label>
                   <div className="relative">
                     <select 
-                      className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                      className="block appearance-none w-full bg-white border border-gray text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
                       name="project-id"
                       value={event.project_id}
                       onChange={(ev: any) =>
@@ -147,7 +149,7 @@ export default function CreateEventDialog({
                   </label>
                   <div className="relative">
                     <select 
-                      className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                      className="block appearance-none w-full bg-white border border-gray text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
                       id="priority"
                       value={event.priority}
                       onChange={(ev: any) =>  setEvent({...event, "priority": ev.target.value})}
@@ -168,7 +170,8 @@ export default function CreateEventDialog({
                   Địa điểm *
                 </label>
                 <div className="mt-2">
-                  <input
+                <TextField
+                    size="small"
                     type="text"
                     name="location"
                     id="location"
@@ -176,7 +179,7 @@ export default function CreateEventDialog({
                     onChange={(ev: any) => handleChangeEvent(ev)}
                     value={event.location}
                     required
-                    className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    className="appearance-none block w-full bg-white text-gray-700 border border-gray rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   />
                 </div>
               </div>
@@ -247,12 +250,14 @@ export default function CreateEventDialog({
                 <label htmlFor="first-name" className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                   Mô tả sự kiện
                 </label>
-                <textarea
+                <TextField
+                  size="small"
                   id="description"
                   name="description"
+                  multiline
                   rows={4}
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  defaultValue={''}
+                  className="appearance-none block w-full bg-white text-gray-700 border border-gray rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  value={event.description}
                   onChange={(ev: any) => handleChangeEvent(ev)}
                 />
               </div>

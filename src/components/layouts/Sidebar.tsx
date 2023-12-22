@@ -43,9 +43,10 @@ const Sidebar = () => {
   useEffect(() => {
     async function getTodayTasksNum() {
       const today = new Date();
-      const data = await getDailyTasksNum(today)
+      (await getDailyTasksNum(today)).onSnapshot((data) => {
+        setNumTodayTasks(data.docs.length)
+      })
       setToday(moment(today).format("YYYY/MM/DD"))
-      setNumTodayTasks(data.length)
     }
     getTodayTasksNum()
   // eslint-disable-next-line react-hooks/exhaustive-deps

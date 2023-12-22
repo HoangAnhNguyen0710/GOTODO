@@ -52,16 +52,16 @@ export async function getDailyTasks(Day: Date, Filter: Array<string>) {
     const end = new Date(Day)
     end.setHours(23, 59, 59)
 
-    const data = await firestore
+    return await firestore
       .collection("Tasks")
       .where("due_at", "<=", end.toISOString())
       .where("due_at", ">=", start.toISOString())
       .where("project_id", "in", Filter)
-      .get();
-    return data.docs.map((item) => ({
-      ...item.data(),
-      // docId: item.id,
-    }));
+    //   .get();
+    // return data.docs.map((item) => ({
+    //   ...item.data(),
+    //   // docId: item.id,
+    // }));
   }
 
   export async function getDailyTasksNum(Day: Date) {
@@ -71,15 +71,10 @@ export async function getDailyTasks(Day: Date, Filter: Array<string>) {
     const end = new Date(Day)
     end.setHours(23, 59, 59)
 
-    const data = await firestore
+    return await firestore
       .collection("Tasks")
       .where("due_at", "<=", end.toISOString())
       .where("due_at", ">=", start.toISOString())
-      .get();
-    return data.docs.map((item) => ({
-      ...item.data(),
-      // docId: item.id,
-    }));
   }
 
 // get task theo tuan
@@ -163,20 +158,11 @@ export async function getPassDueTasks(Day: Date, Filter: Array<string>) {
     // start.setHours(0, 0, 0)
 
     const f = false
-    const data = await firestore
+    return await firestore
       .collection("Tasks")
       .where("due_at", "<=", start.toISOString())
       .where("is_done", "==", f)
       .where("project_id", "in", Filter)
-      .get();
-    console.log(data.docs.map((item) => ({
-      ...item.data(),
-      // docId: item.id,
-    })), start.toISOString())
-    return data.docs.map((item) => ({
-      ...item.data(),
-      // docId: item.id,
-    }))
   }
 
 // update task
@@ -201,16 +187,16 @@ export async function getAllTasks(taskFilter: Array<string>) {
   if( taskFilter.length == 0){
     taskFilter = ["-1"]
   }
-  const data = await firestore
+  return await firestore
     .collection("Tasks")
     .where("project_id", "in", taskFilter)
-    .get();
-  const dataList = data.docs.map((item) => ({
-    ...item.data(),
-  }));
+  // .get();
+  // const dataList = data.docs.map((item) => ({
+  //   ...item.data(),
+  // }));
 
-  const convertedList = convertToCalendarEvents(dataList as Array<Task>)
-  return convertedList
+  // const convertedList = convertToCalendarEvents(dataList as Array<Task>)
+  //return convertedList
 }
 
 const color = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]

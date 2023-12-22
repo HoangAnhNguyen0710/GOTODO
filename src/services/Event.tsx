@@ -66,17 +66,17 @@ export async function getAllEvents(eventFilter: Array<string>) {
   if( eventFilter.length == 0){
     eventFilter = ["-1"]
   }
-  const data = await firestore
+  return await firestore
     .collection("Events")
     .where("project_id", "in", eventFilter)
-    .get();
-  const dataList = data.docs.map((item) => ({
-    ...item.data(),
-    // docId: item.id,
-  }));
+  //   .get();
+  // const dataList = data.docs.map((item) => ({
+  //   ...item.data(),
+  //   // docId: item.id,
+  // }));
 
-  const convertedList = convertToCalendarEvents(dataList as Array<Event>)
-  return convertedList
+  // const convertedList = convertToCalendarEvents(dataList as Array<Event>)
+  // return convertedList
 }
 
 // update event
@@ -98,7 +98,7 @@ export async function updateTask(
 
   const color = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
 
-export function convertToCalendarEvents(events: Array<Event>) {
+export function convertEventToCalendarEvents(events: Array<Event>) {
 
   const convertedList: Array<CalendarEvent> = []
 

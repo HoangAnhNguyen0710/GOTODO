@@ -3,6 +3,7 @@ import {
   Dialog,
   DialogContent,
   FormGroup,
+  TextField,
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { FormEvent, useState } from "react";
@@ -17,7 +18,7 @@ export interface CreateEventFormProps {
   handleClose: () => void;
 }
 
-const initialTaskData:Task = {
+const initialTaskData: Task = {
   id: "",
   title: "",
   description: "",
@@ -92,15 +93,15 @@ export default function CreateTaskDialog({
                     Tên nhiệm vụ *
                   </label>
                   <div className="mt-2">
-                    <input
+                    <TextField
+                      size="small"
                       type="text"
                       name="title"
                       id="title"
                       autoComplete="given-name"
                       onChange={(ev: any) => handleChangeTask(ev)}
                       value={task.title}
-                      required
-                      className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      className="appearance-none block w-full bg-white text-gray-700 border border-gray rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     />
                   </div>
                 </div>
@@ -118,7 +119,7 @@ export default function CreateTaskDialog({
                   </label>
                   <div className="relative">
                     <select
-                      className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      className="block appearance-none w-full bg-white border border-gray text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                       name="project-id"
                       value={task.project_id}
                       onChange={(ev: any) =>
@@ -150,7 +151,7 @@ export default function CreateTaskDialog({
                   </label>
                   <div className="relative">
                     <select
-                      className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                      className="block appearance-none w-full bg-white border border-gray text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                       id="priority"
                       value={task.priority}
                       onChange={(ev: any) =>
@@ -219,11 +220,13 @@ export default function CreateTaskDialog({
                 >
                   Mô tả sự kiện
                 </label>
-                <textarea
+                <TextField
+                  size="small"
+                  multiline
                   id="description"
                   name="description"
                   rows={4}
-                  className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  className="appearance-none block w-full bg-white text-gray-700 border border-gray rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   defaultValue={""}
                   onChange={(ev: any) => handleChangeTask(ev)}
                 />

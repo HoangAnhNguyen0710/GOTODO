@@ -12,6 +12,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { createEvent } from "../../services/Event";
+import { ToastContainer, toast } from "react-toast";
 
 export interface CreateEventFormProps {
   open: boolean;
@@ -29,6 +30,11 @@ const initialEventData:Event = {
   location: "",
 }
 
+interface FieldValidator {
+  error: boolean,
+  message: string
+}
+
 export default function CreateEventDialog({
   open,
   handleClose,
@@ -40,24 +46,27 @@ export default function CreateEventDialog({
   const [startTime, setStartTime] = useState<Dayjs>(dayjs(0))
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(0))
 
-  const [errorMessage, setErrorMessage] = useState<string>('')
   const handleChangeEvent = (ev: FormEvent<HTMLInputElement> | FormEvent<HTMLSelectElement> | any) => {
     setEvent({...event, [ev.currentTarget.name]: ev.currentTarget.value})
+    setTitleErr({error: false, message: ''})
   }
-
+  // state validate
+  const [titleErr, setTitleErr] = useState<FieldValidator>({
+    error: false,
+    message: ''
+  })
   const validateEvent = (event: Event) => {
-    console.log(errorMessage)
     const currentTime = new Date().toISOString()
     if (event.title === "") {
-      setErrorMessage("Chua nhap ten event")
+      setTitleErr({error: true, message: 'chua nhap ten event'})
       return false
     }
     if (event.started_at <= currentTime) {
-      setErrorMessage("thoi gian bat dau event chua hop le")
+      toast.error("thoi gian bat dau event chua hop le")
       return false
     }
     if (event.ended_at <= currentTime || event.ended_at <= event.started_at) {
-      setErrorMessage("thoi gian ket thuc event chua hop le")
+      toast.error("thoi gian ket thuc event chua hop le")
       return false
     }
     return true
@@ -79,8 +88,7 @@ export default function CreateEventDialog({
     }
     if(validateEvent(event)){
     await createEvent(event).then(() => {
-      setErrorMessage('')
-      alert("Create event success")
+      toast.success("Create task success");
       setEvent(initialEventData)
       handleClose()
     }
@@ -91,9 +99,6 @@ export default function CreateEventDialog({
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
-        <div>
-          <span className="text-red-500 font-medium">{errorMessage}<br/></span>
-        </div>
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit mx-5 my-3">
             <div className="flex items-center justify-center flex-col">
@@ -104,6 +109,8 @@ export default function CreateEventDialog({
                   </label>
                   <div className="mt-2">
                     <TextField
+                      error={titleErr.error}
+                      helperText={titleErr.message}
                       size="small"
                       type="text"
                       name="title"
@@ -270,6 +277,7 @@ export default function CreateEventDialog({
           </div>
         </FormGroup>
       </DialogContent>
+      <ToastContainer delay={2000} />
     </Dialog>
   );
 }

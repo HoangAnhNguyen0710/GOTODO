@@ -1,6 +1,6 @@
 import React from "react";
 import { AiFillFacebook, AiFillYoutube, AiOutlineInstagram } from "react-icons/ai";
-
+import { ToastContainer } from "react-toast";
 const Footer = () => {
     return (
         <section className="mobile:px-4 bg-slate-200 px-[8%] py-16 mt-10">
@@ -24,6 +24,7 @@ const Footer = () => {
               <p className="text-gray-300"> Design ©2023 Created by Team Susanoo</p>
             </div>
           </div>
+          <ToastContainer delay={2000} />
         </section>
       );
 }

@@ -1,7 +1,7 @@
 
 import { Checkbox } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useMatch } from "react-router-dom";
 import { SlCalender } from "react-icons/sl";
 import { FaTasks } from "react-icons/fa";
 import { Button } from "antd";
@@ -22,8 +22,9 @@ export interface Items {
 const items: Items[] = [{id: '1', text:'Công việc trên trường'}, {id: '2', text:'Việc tại công ty'}, {id: '3', text:'Vui chơi giải trí'}, {id: '4', text:'Tự học'}]
 
 const Sidebar = () => {
+  const pathMatch = useMatch('todo')
   const dispatch = useDispatch()
-  const [state, setState] = useState<number>(1);
+  const [state, setState] = useState<number>(pathMatch ? 0 : 1);
   const [dropDown, setDropDown] = useState<boolean>(false)
   const [numtodayTasks, setNumTodayTasks] = useState<number>()
   const [today, setToday] = useState<string>('')
@@ -146,7 +147,7 @@ const Sidebar = () => {
             <Link to="/" className="ml-2" onClick={() => changeState(1)}>
               <Button className={state === 1 ? "bg-white w-44 h-44 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center" : "bg-slate-100 w-40 h-40 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"}> 
                 <SlCalender className="text-4xl mt-12 mb-2"/>
-                <span> Calender </span>
+                <span> Calendar </span>
               </Button>
             </Link>
           </div>

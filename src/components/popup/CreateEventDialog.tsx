@@ -3,6 +3,8 @@ import {
   Dialog,
   DialogContent,
   FormGroup,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
@@ -12,6 +14,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { createEvent } from "../../services/Event";
+import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
 
 export interface CreateEventFormProps {
   open: boolean;
@@ -37,16 +40,17 @@ export default function CreateEventDialog({
   const [event, setEvent] = useState<Event>(initialEventData);
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs(Date.now()))
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()))
-  const [startTime, setStartTime] = useState<Dayjs>(dayjs(0))
-  const [endTime, setEndTime] = useState<Dayjs>(dayjs(0))
+  const [startTime, setStartTime] = useState<Dayjs>(dayjs(Date.now()))
+  const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()))
 
   const [errorMessage, setErrorMessage] = useState<string>('')
   const handleChangeEvent = (ev: FormEvent<HTMLInputElement> | FormEvent<HTMLSelectElement> | any) => {
     setEvent({...event, [ev.currentTarget.name]: ev.currentTarget.value})
   }
 
+  const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
+
   const validateEvent = (event: Event) => {
-    console.log(errorMessage)
     const currentTime = new Date().toISOString()
     if (event.title === "") {
       setErrorMessage("Chua nhap ten event")
@@ -120,27 +124,25 @@ export default function CreateEventDialog({
                   <NotificationsIcon className="text-xl"/>
                 </div>
               </div>
-              <div className="flex items-center justify-between w-full mt-4">
+              <div className="flex items-center justify-between w-full my-4">
                 <div>
                   <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="projectid">
                     Loại công việc
                   </label>
                   <div className="relative">
-                    <select 
-                      className="block appearance-none w-full bg-white border border-gray text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                    <Select 
+                      sx={{ width: 230 }}
+                      size="small"
                       name="project-id"
                       value={event.project_id}
                       onChange={(ev: any) =>
                         setEvent({ ...event, project_id: ev.target.value })
                       }>
-                      <option value={"1"}>Công việc trên trường</option>
-                      <option value={"2"}>Việc tại công ty</option>
-                      <option value={"3"}>Vui chơi giải trí</option>
-                      <option value={"4"}>Tự học</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
+                      <MenuItem value={"1"}>Công việc trên trường</MenuItem>
+                      <MenuItem value={"2"}>Việc tại công ty</MenuItem>
+                      <MenuItem value={"3"}>Vui chơi giải trí</MenuItem>
+                      <MenuItem value={"4"}>Tự học</MenuItem>
+                    </Select>
                   </div>
                 </div>
                 <div>
@@ -148,24 +150,22 @@ export default function CreateEventDialog({
                     Độ ưu tiên
                   </label>
                   <div className="relative">
-                    <select 
-                      className="block appearance-none w-full bg-white border border-gray text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" 
+                    <Select 
+                      size="small"
+                      sx={{ width: 180 }}
                       id="priority"
                       value={event.priority}
                       onChange={(ev: any) =>  setEvent({...event, "priority": ev.target.value})}
                       >
-                      <option value={0}>Thấp</option>
-                      <option value={1}>Trung bình</option>
-                      <option value={2}>Cao</option>
-                      <option value={3}>Rất cao</option>
-                    </select>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                      <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
+                      <MenuItem value={0} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Thấp <CircleRoundedIcon sx={{color: priorityColors[0]}}/></MenuItem>
+                      <MenuItem value={1} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Trung bình <CircleRoundedIcon sx={{color: priorityColors[1]}}/></MenuItem>
+                      <MenuItem value={2} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Cao <CircleRoundedIcon sx={{color: priorityColors[2]}}/></MenuItem>
+                      <MenuItem value={3} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Rất cao <CircleRoundedIcon sx={{color: priorityColors[3]}}/></MenuItem>
+                    </Select>
                   </div>
                 </div>
               </div>
-              <div className="py-3 w-full">
+              <div className="pb-3 w-full">
                 <label htmlFor="first-name" className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                   Địa điểm *
                 </label>

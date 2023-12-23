@@ -15,10 +15,16 @@ import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { Task } from "../../models/tasks";
 import { createTask } from "../../services/Task";
 import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
+import { ToastContainer, toast } from "react-toast";
 
 export interface CreateEventFormProps {
   open: boolean;
   handleClose: () => void;
+}
+
+interface FieldValidator {
+  error: boolean,
+  message: string
 }
 
 const initialTaskData: Task = {
@@ -37,23 +43,29 @@ export default function CreateTaskDialog({
 }: CreateEventFormProps) {
   const [task, setTask] = useState<Task>(initialTaskData);
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()));
-  const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()));
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [endTime, setEndTime] = useState<Dayjs>(dayjs(0));
 
   const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
 
   const handleChangeTask = (ev: FormEvent<HTMLInputElement> | any) => {
     setTask({ ...task, [ev.currentTarget.name]: ev.currentTarget.value });
+    setTitleErr({error: false, message: ''})
   };
+
+  // state validate
+  const [titleErr, setTitleErr] = useState<FieldValidator>({
+    error: false,
+    message: ''
+  })
 
   const validateTask = (task: Task) => {
     const currentTime = new Date().toISOString();
     if (task.title === "") {
-      setErrorMessage("Chua nhap ten task");
+      setTitleErr({error: true, message: 'chua nhap ten task'})
       return false;
     }
     if (task.due_at <= currentTime) {
-      setErrorMessage("deadline task chua hop le");
+      toast.error("deadline task chua hop le");
       return false;
     }
     return true;
@@ -66,11 +78,9 @@ export default function CreateTaskDialog({
       endT.setHours(endTime?.hour(), endTime?.minute(), endTime?.second());
       task.due_at = endT.toISOString();
     }
-
     if (validateTask(task)) {
       await createTask(task).then(() => {
-        setErrorMessage("");
-        alert("Create task success");
+        toast.success("Create task success");
         setTask(initialTaskData);
         handleClose();
       });
@@ -80,12 +90,6 @@ export default function CreateTaskDialog({
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogContent>
-        <div>
-          <span className="text-red-500 font-medium">
-            {errorMessage}
-            <br />
-          </span>
-        </div>
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit mx-5 my-3">
             <div className="flex items-center justify-center flex-col">
@@ -103,6 +107,8 @@ export default function CreateTaskDialog({
                       type="text"
                       name="title"
                       id="title"
+                      error={titleErr.error}
+                      helperText={titleErr.message}
                       autoComplete="given-name"
                       onChange={(ev: any) => handleChangeTask(ev)}
                       value={task.title}
@@ -233,6 +239,7 @@ export default function CreateTaskDialog({
           </div>
         </FormGroup>
       </DialogContent>
+      <ToastContainer delay={2000} />
     </Dialog>
   );
 }

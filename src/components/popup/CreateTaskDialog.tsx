@@ -43,7 +43,7 @@ export default function CreateTaskDialog({
 }: CreateEventFormProps) {
   const [task, setTask] = useState<Task>(initialTaskData);
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()));
-  const [endTime, setEndTime] = useState<Dayjs>(dayjs(0));
+  const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()));
 
   const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
 

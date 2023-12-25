@@ -38,18 +38,18 @@ export interface CalendarEvent {
 }
 
 const calendars = [
-  {
-    id: "1",
-    name: "Project 1",
-    backgroundColor: "#9e5fff",
-    borderColor: "#9e5fff",
-  },
-  {
-    id: "2",
-    name: "Project 2",
-    backgroundColor: "#00a9ff",
-    borderColor: "#00a9ff",
-  },
+  // {
+  //   id: "1",
+  //   name: "Project 1",
+  //   backgroundColor: "#9e5fff",
+  //   borderColor: "#9e5fff",
+  // },
+  // {
+  //   id: "2",
+  //   name: "Project 2",
+  //   backgroundColor: "#00a9ff",
+  //   borderColor: "#00a9ff",
+  // },
 ];
 
 function Home() {

@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { FormEvent, useState } from "react";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import { IoMdNotificationsOutline } from "react-icons/io";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { Task } from "../../models/tasks";
 import { createTask } from "../../services/Task";
-import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
+import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { ToastContainer, toast } from "react-toast";
 
 export interface CreateEventFormProps {
@@ -23,8 +23,8 @@ export interface CreateEventFormProps {
 }
 
 interface FieldValidator {
-  error: boolean,
-  message: string
+  error: boolean;
+  message: string;
 }
 
 const initialTaskData: Task = {
@@ -45,23 +45,23 @@ export default function CreateTaskDialog({
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()));
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(0));
 
-  const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
+  const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"];
 
   const handleChangeTask = (ev: FormEvent<HTMLInputElement> | any) => {
     setTask({ ...task, [ev.currentTarget.name]: ev.currentTarget.value });
-    setTitleErr({error: false, message: ''})
+    setTitleErr({ error: false, message: "" });
   };
 
   // state validate
   const [titleErr, setTitleErr] = useState<FieldValidator>({
     error: false,
-    message: ''
-  })
+    message: "",
+  });
 
   const validateTask = (task: Task) => {
     const currentTime = new Date().toISOString();
     if (task.title === "") {
-      setTitleErr({error: true, message: 'chua nhap ten task'})
+      setTitleErr({ error: true, message: "chua nhap ten task" });
       return false;
     }
     if (task.due_at <= currentTime) {
@@ -116,8 +116,10 @@ export default function CreateTaskDialog({
                     />
                   </div>
                 </div>
-                <div className="col-span-1 grid justify-items-end">
-                  <NotificationsIcon className="text-xl" />
+                <div className="col-span-1 grid justify-items-end text-2xl">
+                  <span className="cursor-pointer">
+                    <IoMdNotificationsOutline />
+                  </span>
                 </div>
               </div>
               <div className="flex items-center justify-between w-full my-4">
@@ -162,10 +164,50 @@ export default function CreateTaskDialog({
                         setTask({ ...task, priority: ev.target.value })
                       }
                     >
-                      <MenuItem value={0} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Thấp <CircleRoundedIcon sx={{color: priorityColors[0]}}/></MenuItem>
-                      <MenuItem value={1} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Trung bình <CircleRoundedIcon sx={{color: priorityColors[1]}}/></MenuItem>
-                      <MenuItem value={2} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Cao <CircleRoundedIcon sx={{color: priorityColors[2]}}/></MenuItem>
-                      <MenuItem value={3} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Rất cao <CircleRoundedIcon sx={{color: priorityColors[3]}}/></MenuItem>
+                      <MenuItem
+                        value={0}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Thấp{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[0] }} />
+                      </MenuItem>
+                      <MenuItem
+                        value={1}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Trung bình{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[1] }} />
+                      </MenuItem>
+                      <MenuItem
+                        value={2}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Cao{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[2] }} />
+                      </MenuItem>
+                      <MenuItem
+                        value={3}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Rất cao{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[3] }} />
+                      </MenuItem>
                     </Select>
                   </div>
                 </div>

@@ -16,6 +16,7 @@ const Todo = () => {
   const [pastdueDropDown, setPastdueDropDown] = useState<boolean>(true)
   const [todayDropDown, setTodayDropDown] = useState<boolean>(true)
   const [event, setEvent] = useState<CalendarEvent>();
+  const [selectedTask, setSelectedTask] = useState<Task>();
   const taskFilter = useSelector((state: RootState) => state.taskFilter.value )
   useEffect(() => {
     async function getTodayTasks() {
@@ -69,11 +70,27 @@ const Todo = () => {
     return convertedData;
   };
 
-  const handleClickTask = (event) => {
+  const handleClickTask = (event: Task) => {
     const calendarEvent = convertToCalendarEvent(event)
     console.log(calendarEvent);
     setEvent(calendarEvent);
+    setSelectedTask(event)
     setOpenModal(true);
+  }
+
+  useEffect(() => {
+    console.log(selectedTask)
+  }, [selectedTask])
+  const updateSelectedTaskStatement = async () => {
+    if(selectedTask && event){
+      selectedTask.is_done = !selectedTask.is_done
+    
+    const statement: boolean| void = await updateTask(selectedTask.id, selectedTask)
+    if(statement) {
+      setEvent({...event, 'is_done': !event.is_done})
+      setSelectedTask({...selectedTask, 'is_done': !event.is_done})
+    }
+    }
   }
 
   const updateTodayTaskStatement = async (task: Task, index: number) => {
@@ -101,7 +118,7 @@ const Todo = () => {
   return (
     <React.Fragment>
       {event && (
-        <EventDialog open={openModal} onClose={onClose} event={event}/>
+        <EventDialog open={openModal} onClose={onClose} event={event} updateTaskStatement={updateSelectedTaskStatement}/>
       )}
       <div className=" max-w-7xl px-2 mx-16 mt-16 font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="header p-2 mb-2 flex">

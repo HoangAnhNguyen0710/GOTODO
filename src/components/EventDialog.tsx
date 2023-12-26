@@ -5,6 +5,7 @@ import moment from "moment";
 
 interface IEventDialogProps extends DialogProps {
   event: CalendarEvent;
+  updateTaskStatement?: () => void;
 }
 
 const PRIORITIES = ["Thấp", "Trung bình", "Cao", "Rất cao"];
@@ -19,6 +20,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
   open,
   onClose,
   event,
+  updateTaskStatement,
   ...others
 }) => {
   const { start, end, body, location, category, raw, due_at } = event;
@@ -37,14 +39,20 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
             {typeof event.is_done == "boolean" ? (
               event.is_done == true ? (
                 <>
-                  <button className="p-3 m-1 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"></button>
+                  <button
+                    className="p-3 m-1 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"
+                    onClick={updateTaskStatement}
+                  ></button>
                   <div className="font-bold text-2xl w-full ml-12">
                     {event.title}
                   </div>
                 </>
               ) : (
                 <>
-                  <button className="p-3 m-1 border-red-600 border-2 border-solid rounded-full absolute"></button>
+                  <button
+                    className="p-3 m-1 border-red-600 border-2 border-solid rounded-full absolute"
+                    onClick={updateTaskStatement}
+                  ></button>
                   <div className="font-bold text-2xl w-full ml-12">
                     {event.title}
                   </div>

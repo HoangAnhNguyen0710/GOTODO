@@ -112,7 +112,7 @@ export function convertEventToCalendarEvents(events: Array<Event>) {
         priority: value.priority,
         reminders: value.reminders,
       },
-      backgroundColor: color[value.priority],
+      backgroundColor: color[Number(value.priority)],
       state: "state here",
     };
 

@@ -56,7 +56,8 @@ export async function getDailyTasks(Day: Date, Filter: Array<string>) {
     .collection("Tasks")
     .where("due_at", "<=", end.toISOString())
     .where("due_at", ">=", start.toISOString())
-    .where("project_id", "in", Filter);
+    .where("project_id", "in", Filter)
+    .orderBy("due_at", "desc");
   //   .get();
   // return data.docs.map((item) => ({
   //   ...item.data(),
@@ -160,7 +161,8 @@ export async function getPassDueTasks(Day: Date, Filter: Array<string>) {
     .collection("Tasks")
     .where("due_at", "<=", start.toISOString())
     .where("is_done", "==", f)
-    .where("project_id", "in", Filter);
+    .where("project_id", "in", Filter)
+    .orderBy("due_at", "desc");
 }
 
 // update task
@@ -186,9 +188,11 @@ export async function getAllTasks(taskFilter: Array<string>) {
   if (taskFilter.length == 0) {
     taskFilter = ["-1"];
   }
+  const f = false;
   return await firestore
     .collection("Tasks")
-    .where("project_id", "in", taskFilter);
+    .where("project_id", "in", taskFilter)
+    .where("is_done", "==", f);
   // .get();
   // const dataList = data.docs.map((item) => ({
   //   ...item.data(),
@@ -215,8 +219,9 @@ export function convertToCalendarEvents(tasks: Array<Task>) {
         priority: value.priority,
         reminders: value.reminders,
       },
-      backgroundColor: color[value.priority],
+      backgroundColor: color[Number(value.priority)],
       state: "state here",
+      is_done: value.is_done,
     };
 
     convertedList.push(convertedData);

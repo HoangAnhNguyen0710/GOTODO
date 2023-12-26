@@ -27,6 +27,7 @@ export interface CalendarEvent {
   due_at?: string;
   is_done?: boolean;
   backgroundColor?: string;
+  borderColor?: string
   color?: string;
   body?: string;
   raw?: {

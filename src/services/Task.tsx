@@ -1,6 +1,7 @@
 import { firestore } from "../config/firebase";
 import { Task } from "../models/tasks";
 import { CalendarEvent } from "../pages/Home";
+import { BACKGROUND_COLOR, BORDER_COLOR} from "../const/color";
 
 // create task
 export async function createTask(task: Task) {
@@ -202,8 +203,6 @@ export async function getAllTasks(taskFilter: Array<string>) {
   //return convertedList
 }
 
-const color = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"];
-
 export function convertToCalendarEvents(tasks: Array<Task>) {
   const convertedList: Array<CalendarEvent> = [];
 
@@ -219,10 +218,11 @@ export function convertToCalendarEvents(tasks: Array<Task>) {
         priority: value.priority,
         reminders: value.reminders,
       },
-      backgroundColor: color[Number(value.priority)],
-      state: "state here",
-      is_done: value.is_done,
-    };
+      backgroundColor: BACKGROUND_COLOR[Number(value.priority)],
+      borderColor: BORDER_COLOR[Number(value.priority)],
+      state: 'state here',
+      is_done: value.is_done
+    }
 
     convertedList.push(convertedData);
   });

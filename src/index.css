@@ -28,6 +28,23 @@ body {
   font-family: "Quicksand", sans-serif;
 }
 
+::-webkit-scrollbar {
+  border-radius: 5px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background: #7a7a7a54;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #717172;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #414141;
+}
+
 input[type="radio"] {
   /* Add if not using autoprefixer */
   -webkit-appearance: none;

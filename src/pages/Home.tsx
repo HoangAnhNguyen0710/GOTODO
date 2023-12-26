@@ -20,7 +20,7 @@ export interface CalendarEvent {
   calendarId: string;
   title: string;
   category: "time" | "milestone" | "task";
-  location?: string,
+  location?: string;
   dueDateClass?: string;
   start?: string;
   end: string;
@@ -34,6 +34,7 @@ export interface CalendarEvent {
     class?: string;
     memo?: string;
     priority: number;
+    reminders: number[];
   };
   state?: string;
 }
@@ -60,9 +61,9 @@ function Home() {
   const [openModal, setOpenModal] = useState(false);
   const [event, setEvent] = useState<CalendarEvent>();
   const calendarRef = React.useRef<any>();
-  const [initialEvents, setInitialEvents] = useState<CalendarEvent[]>([])
-  const [initialTasks, setInitialTasks] = useState<CalendarEvent[]>([])
-  const eventFilter = useSelector((state: RootState) => state.taskFilter.value)
+  const [initialEvents, setInitialEvents] = useState<CalendarEvent[]>([]);
+  const [initialTasks, setInitialTasks] = useState<CalendarEvent[]>([]);
+  const eventFilter = useSelector((state: RootState) => state.taskFilter.value);
 
   useEffect(() => {
     async function getAllEv() {
@@ -72,18 +73,22 @@ function Home() {
         }));
         const convertedList = convertToCalendarEvents(dataList as Array<Task>);
         setInitialTasks(convertedList);
-      })
-      await (await getAllEvents(eventFilter)).onSnapshot((data) => {
+      });
+      await (
+        await getAllEvents(eventFilter)
+      ).onSnapshot((data) => {
         const dataList = data.docs.map((item) => ({
           ...item.data(),
         }));
-        const convertedList = convertEventToCalendarEvents(dataList as Array<Event>);
+        const convertedList = convertEventToCalendarEvents(
+          dataList as Array<Event>
+        );
         setInitialEvents(convertedList);
-      })
-      return
+      });
+      return;
     }
-    getAllEv()
-  }, [eventFilter])
+    getAllEv();
+  }, [eventFilter]);
   const theme = {
     week: {
       nowIndicatorLabel: {
@@ -163,7 +168,7 @@ function Home() {
   };
 
   const calendarOptions = {
-    height:"700px",
+    height: "700px",
     view: type,
     week: {
       startDayOfWeek: 1,
@@ -211,6 +216,8 @@ function Home() {
     calendars: calendars,
     theme: theme,
   };
+
+  console.log(initialEvents);
 
   const onChange = (e: RadioChangeEvent) => {
     setType(e.target.value);

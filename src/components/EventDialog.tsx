@@ -68,7 +68,8 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
               {items[Number(event.calendarId) - 1]}
             </h4>
           </div>
-          <div className="description py-2 mr-2 mt-8">
+          <div className="description py-2 mr-2 mt-4">
+            <p className="text-gray font-bold">Description</p>
             <p className="text-sm">{body}</p>
           </div>
         </div>

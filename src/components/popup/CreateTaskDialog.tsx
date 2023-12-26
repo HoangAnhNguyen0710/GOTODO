@@ -8,7 +8,7 @@ import {
   TextField,
   Checkbox,
 } from "@mui/material";
-import { ReminderOption } from "./CreateEventDialog";
+import { DEFAULT_REMINDER, ReminderOption } from "./CreateEventDialog";
 import dayjs, { Dayjs } from "dayjs";
 import { FormEvent, useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -53,7 +53,7 @@ export default function CreateTaskDialog({
 }: CreateEventFormProps) {
   const [task, setTask] = useState<Task>(initialTaskData);
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()));
-  const [reminders, setReminders] = useState<number[]>([]);
+  const [reminders, setReminders] = useState<number[]>([DEFAULT_REMINDER]);
   const [openReminder, setOpenReminder] = useState(false);
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()));
 
@@ -111,16 +111,29 @@ export default function CreateTaskDialog({
     }
     taskCopy.reminders = [...reminders];
     if (validateTask(taskCopy)) {
-      await createTask(taskCopy).then(() => {
-        toast.success("Create task success");
-        setTask(initialTaskData);
-        handleClose();
-      });
+      console.log(taskCopy);
+      await createTask(taskCopy)
+        .then(() => {
+          toast.success(
+            reminders.length !== 1
+              ? "Tạo todo thành công"
+              : "Đã tạo todo. Bạn sẽ được mặc định nhắc nhở trước deadline 5 phút"
+          );
+        })
+        .finally(() => {
+          setTask(initialTaskData);
+          closeDialog();
+        });
     }
   };
 
+  const closeDialog = () => {
+    handleClose();
+    setReminders([DEFAULT_REMINDER]);
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={closeDialog}>
       <DialogContent>
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit mx-5 my-3">

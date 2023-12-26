@@ -120,18 +120,24 @@ export default function CreateEventDialog({
     eventCopy.reminders = [...reminders];
     if (validateEvent(eventCopy)) {
       console.log(eventCopy);
-      await createEvent(eventCopy).then((data) => {
-        toast.success(
-          reminders.length !== 0
-            ? "Create task success"
-            : "Task created. Only default reminders 5 mins before event"
-        );
-        console.log(data);
-        setReminders([]);
-        setEvent(initialEventData);
-        handleClose();
-      });
+      await createEvent(eventCopy)
+        .then(() => {
+          toast.success(
+            reminders.length !== 1
+              ? "Tạo sự kiện thành công"
+              : "Đã tạo sự kiện. Bạn sẽ được mặc định nhắc nhở trước khi bắt đầu sự kiện 5 phút"
+          );
+        })
+        .finally(() => {
+          setEvent(initialEventData);
+          closeDialog();
+        });
     }
+  };
+
+  const closeDialog = () => {
+    handleClose();
+    setReminders([DEFAULT_REMINDER]);
   };
 
   const handleReminderChange = (
@@ -154,7 +160,7 @@ export default function CreateEventDialog({
   };
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={closeDialog}>
       <DialogContent>
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit mx-5 my-3">

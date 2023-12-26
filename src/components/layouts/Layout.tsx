@@ -14,7 +14,7 @@ const Layout: React.FunctionComponent<LayoutProps> = ({ children }) => {
     <div className="flex flex-col items-stretch mx-4">
       <div className="min-h-screen">
         <Header />
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-4 gap-4">
             <div className="col-span-1">
                 <Sidebar/>
             </div>

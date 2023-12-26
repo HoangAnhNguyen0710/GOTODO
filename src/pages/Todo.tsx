@@ -103,6 +103,7 @@ const Todo = () => {
       body: task.description,
       raw: {
         priority: task.priority,
+        reminders: task.reminders,
       },
       is_done: task.is_done,
     };

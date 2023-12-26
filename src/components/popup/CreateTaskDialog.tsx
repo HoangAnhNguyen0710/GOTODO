@@ -6,15 +6,17 @@ import {
   MenuItem,
   Select,
   TextField,
+  Checkbox,
 } from "@mui/material";
+import { DEFAULT_REMINDER, ReminderOption } from "./CreateEventDialog";
 import dayjs, { Dayjs } from "dayjs";
 import { FormEvent, useState } from "react";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import { IoMdNotificationsOutline } from "react-icons/io";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 import { Task } from "../../models/tasks";
 import { createTask } from "../../services/Task";
-import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
+import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { ToastContainer, toast } from "react-toast";
 
 export interface CreateEventFormProps {
@@ -23,8 +25,8 @@ export interface CreateEventFormProps {
 }
 
 interface FieldValidator {
-  error: boolean,
-  message: string
+  error: boolean;
+  message: string;
 }
 
 const initialTaskData: Task = {
@@ -35,7 +37,15 @@ const initialTaskData: Task = {
   priority: 0,
   project_id: "1",
   is_done: false,
+  reminders: [5],
 };
+
+const items: ReminderOption[] = [
+  { text: "12 giờ", value: 43200 },
+  { text: "3 giờ", value: 10800 },
+  { text: "1 giờ", value: 3600 },
+  { text: "30 phút", value: 1800 },
+];
 
 export default function CreateTaskDialog({
   open,
@@ -43,25 +53,45 @@ export default function CreateTaskDialog({
 }: CreateEventFormProps) {
   const [task, setTask] = useState<Task>(initialTaskData);
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()));
+  const [reminders, setReminders] = useState<number[]>([DEFAULT_REMINDER]);
+  const [openReminder, setOpenReminder] = useState(false);
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()));
 
-  const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"]
+  const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"];
 
   const handleChangeTask = (ev: FormEvent<HTMLInputElement> | any) => {
     setTask({ ...task, [ev.currentTarget.name]: ev.currentTarget.value });
-    setTitleErr({error: false, message: ''})
+    setTitleErr({ error: false, message: "" });
+  };
+
+  const handleReminderChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    value: number
+  ) => {
+    const remindersCopy = [...reminders];
+    if (e.target.checked) {
+      remindersCopy.push(value);
+    } else {
+      const index = remindersCopy.indexOf(value);
+      if (index !== -1) remindersCopy.splice(index, 1);
+    }
+    setReminders(remindersCopy);
+  };
+
+  const handleToggleReminder = () => {
+    setOpenReminder(!openReminder);
   };
 
   // state validate
   const [titleErr, setTitleErr] = useState<FieldValidator>({
     error: false,
-    message: ''
-  })
+    message: "",
+  });
 
   const validateTask = (task: Task) => {
     const currentTime = new Date().toISOString();
     if (task.title === "") {
-      setTitleErr({error: true, message: 'chua nhap ten task'})
+      setTitleErr({ error: true, message: "chua nhap ten task" });
       return false;
     }
     if (task.due_at <= currentTime) {
@@ -73,27 +103,42 @@ export default function CreateTaskDialog({
   const handleSubmitForm = async (ev: FormEvent) => {
     ev.preventDefault();
     let endT: Date;
+    const taskCopy = { ...task };
     if (endDate) {
       endT = new Date(endDate.toISOString());
       endT.setHours(endTime?.hour(), endTime?.minute(), endTime?.second());
-      task.due_at = endT.toISOString();
+      taskCopy.due_at = endT.toISOString();
     }
-    if (validateTask(task)) {
-      await createTask(task).then(() => {
-        toast.success("Create task success");
-        setTask(initialTaskData);
-        handleClose();
-      });
+    taskCopy.reminders = [...reminders];
+    if (validateTask(taskCopy)) {
+      console.log(taskCopy);
+      await createTask(taskCopy)
+        .then(() => {
+          toast.success(
+            reminders.length !== 1
+              ? "Tạo todo thành công"
+              : "Đã tạo todo. Bạn sẽ được mặc định nhắc nhở trước deadline 5 phút"
+          );
+        })
+        .finally(() => {
+          setTask(initialTaskData);
+          closeDialog();
+        });
     }
   };
 
+  const closeDialog = () => {
+    handleClose();
+    setReminders([DEFAULT_REMINDER]);
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={closeDialog}>
       <DialogContent>
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit mx-5 my-3">
             <div className="flex items-center justify-center flex-col">
-              <div className="flex items-center grid grid-cols-4 justify-between w-full">
+              <div className="items-center grid grid-cols-4 justify-between w-full">
                 <div className="col-span-3">
                   <label
                     htmlFor="first-name"
@@ -116,8 +161,28 @@ export default function CreateTaskDialog({
                     />
                   </div>
                 </div>
-                <div className="col-span-1 grid justify-items-end">
-                  <NotificationsIcon className="text-xl" />
+                <div className="col-span-1 grid justify-items-end text-2xl relative">
+                  <span
+                    className="cursor-pointer"
+                    onClick={handleToggleReminder}
+                  >
+                    <IoMdNotificationsOutline />
+                  </span>
+                  {openReminder ? (
+                    <div className="absolute bg-white z-50 w-56 shadow-md top-8 border-2 border-gray p-2 rounded-lg text-sm font-bold">
+                      {items.map((item) => (
+                        <div className="text-zinc-400 my-2" key={item.text}>
+                          <Checkbox
+                            value={item.value}
+                            onChange={(e) =>
+                              handleReminderChange(e, item.value)
+                            }
+                          />
+                          Báo lại sau {item.text}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className="flex items-center justify-between w-full my-4">
@@ -162,10 +227,50 @@ export default function CreateTaskDialog({
                         setTask({ ...task, priority: ev.target.value })
                       }
                     >
-                      <MenuItem value={0} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Thấp <CircleRoundedIcon sx={{color: priorityColors[0]}}/></MenuItem>
-                      <MenuItem value={1} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Trung bình <CircleRoundedIcon sx={{color: priorityColors[1]}}/></MenuItem>
-                      <MenuItem value={2} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Cao <CircleRoundedIcon sx={{color: priorityColors[2]}}/></MenuItem>
-                      <MenuItem value={3} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>Rất cao <CircleRoundedIcon sx={{color: priorityColors[3]}}/></MenuItem>
+                      <MenuItem
+                        value={0}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Thấp{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[0] }} />
+                      </MenuItem>
+                      <MenuItem
+                        value={1}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Trung bình{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[1] }} />
+                      </MenuItem>
+                      <MenuItem
+                        value={2}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Cao{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[2] }} />
+                      </MenuItem>
+                      <MenuItem
+                        value={3}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        Rất cao{" "}
+                        <CircleRoundedIcon sx={{ color: priorityColors[3] }} />
+                      </MenuItem>
                     </Select>
                   </div>
                 </div>

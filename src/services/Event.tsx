@@ -1,6 +1,7 @@
 import { firestore } from "../config/firebase";
 import  Event from "../models/events";
 import { CalendarEvent } from "../pages/Home";
+import { BACKGROUND_COLOR, BORDER_COLOR} from "../const/color";
 
 // create event
 export async function createEvent(event: Event) {
@@ -96,9 +97,6 @@ export async function updateTask(
       });
   }
 
-const bdcolor = ["#33BFFF", "#f0f72f", "#f7902f", "#eb4034"]
-const bgcolor = ["#e6f7ff", "#fff9e6", "#fef2e6", "#fad3d1"]
-
 export function convertEventToCalendarEvents(events: Array<Event>) {
 
   const convertedList: Array<CalendarEvent> = []
@@ -116,9 +114,8 @@ export function convertEventToCalendarEvents(events: Array<Event>) {
       raw: {
         priority: value.priority
       },
-      color: bdcolor[Number(value.priority)],
-      backgroundColor: bgcolor[Number(value.priority)],
-      borderColor: bdcolor[Number(value.priority)],
+      backgroundColor: BACKGROUND_COLOR[Number(value.priority)],
+      borderColor: BORDER_COLOR[Number(value.priority)],
       state: 'state here'
     }
 

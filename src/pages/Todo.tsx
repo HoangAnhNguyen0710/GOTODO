@@ -120,7 +120,7 @@ const Todo = () => {
       {event && (
         <EventDialog open={openModal} onClose={onClose} event={event} updateTaskStatement={updateSelectedTaskStatement}/>
       )}
-      <div className=" max-w-7xl px-2 mx-16 mt-16 font-montserrat bg-white drop-shadow-md rounded-lg">
+      <div className=" max-w-7xl px-2 mt-16 font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="header p-2 mb-2 flex">
           <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
           <h4 className="date p-3 text-sm font-normal">{moment(new Date()).locale('vi').format("dddd, MMMM Do")}</h4>

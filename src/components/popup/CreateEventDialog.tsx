@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
   Dialog,
@@ -6,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Checkbox,
 } from "@mui/material";
 import dayjs, { Dayjs } from "dayjs";
 import { FormEvent, useState } from "react";
@@ -22,6 +24,8 @@ export interface CreateEventFormProps {
   handleClose: () => void;
 }
 
+export const DEFAULT_REMINDER = 5; // Default behaviour is notify before event start DEFAULT_REMINDER secs
+
 const initialEventData: Event = {
   id: "",
   title: "",
@@ -31,12 +35,25 @@ const initialEventData: Event = {
   priority: 0,
   project_id: "1",
   location: "",
+  reminders: [DEFAULT_REMINDER],
 };
 
 interface FieldValidator {
   error: boolean;
   message: string;
 }
+
+export interface ReminderOption {
+  text: string;
+  value: number;
+}
+
+const items: ReminderOption[] = [
+  { text: "12 giờ", value: 43200 },
+  { text: "3 giờ", value: 10800 },
+  { text: "1 giờ", value: 3600 },
+  { text: "30 phút", value: 1800 },
+];
 
 export default function CreateEventDialog({
   open,
@@ -47,6 +64,8 @@ export default function CreateEventDialog({
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs(Date.now()));
   const [startTime, setStartTime] = useState<Dayjs>(dayjs(Date.now()));
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()));
+  const [reminders, setReminders] = useState<number[]>([DEFAULT_REMINDER]);
+  const [openReminder, setOpenReminder] = useState(false);
 
   const handleChangeEvent = (
     ev: FormEvent<HTMLInputElement> | FormEvent<HTMLSelectElement> | any
@@ -83,6 +102,7 @@ export default function CreateEventDialog({
     ev.preventDefault();
     let startT: Date;
     let endT: Date;
+    const eventCopy = { ...event };
     if (startDate) {
       startT = new Date(startDate.toISOString());
       startT.setHours(
@@ -90,20 +110,47 @@ export default function CreateEventDialog({
         startTime?.minute(),
         startTime?.second()
       );
-      event.started_at = startT.toISOString();
+      eventCopy.started_at = startT.toISOString();
     }
     if (endDate) {
       endT = new Date(endDate.toISOString());
       endT.setHours(endTime?.hour(), endTime?.minute(), endTime?.second());
-      event.ended_at = endT.toISOString();
+      eventCopy.ended_at = endT.toISOString();
     }
-    if (validateEvent(event)) {
-      await createEvent(event).then(() => {
-        toast.success("Create task success");
+    eventCopy.reminders = [...reminders];
+    if (validateEvent(eventCopy)) {
+      console.log(eventCopy);
+      await createEvent(eventCopy).then((data) => {
+        toast.success(
+          reminders.length !== 0
+            ? "Create task success"
+            : "Task created. Only default reminders 5 mins before event"
+        );
+        console.log(data);
+        setReminders([]);
         setEvent(initialEventData);
         handleClose();
       });
     }
+  };
+
+  const handleReminderChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    value: number
+  ) => {
+    const remindersCopy = [...reminders];
+    if (e.target.checked) {
+      remindersCopy.push(value);
+    } else {
+      const index = remindersCopy.indexOf(value);
+      if (index !== -1) remindersCopy.splice(index, 1);
+    }
+    console.log(remindersCopy);
+    setReminders(remindersCopy);
+  };
+
+  const handleToggleReminder = () => {
+    setOpenReminder(!openReminder);
   };
 
   return (
@@ -112,7 +159,7 @@ export default function CreateEventDialog({
         <FormGroup onSubmit={handleSubmitForm}>
           <div className="min-w-[420px] min-h-[480px] h-fit w-fit mx-5 my-3">
             <div className="flex items-center justify-center flex-col">
-              <div className="grid grid-cols-4 justify-between w-full">
+              <div className="grid grid-cols-4 items-center justify-between w-full">
                 <div className="col-span-3">
                   <label
                     htmlFor="first-name"
@@ -136,10 +183,28 @@ export default function CreateEventDialog({
                     />
                   </div>
                 </div>
-                <div className="col-span-1 grid justify-items-end text-2xl">
-                  <span className="cursor-pointer">
+                <div className="col-span-1 grid justify-items-end text-2xl relative">
+                  <span
+                    className="cursor-pointer"
+                    onClick={handleToggleReminder}
+                  >
                     <IoMdNotificationsOutline />
                   </span>
+                  {openReminder ? (
+                    <div className="absolute bg-white z-50 w-56 shadow-md top-8 border-2 border-gray p-2 rounded-lg text-sm font-bold">
+                      {items.map((item) => (
+                        <div className="text-zinc-400 my-2" key={item.text}>
+                          <Checkbox
+                            value={item.value}
+                            onChange={(e) =>
+                              handleReminderChange(e, item.value)
+                            }
+                          />
+                          Báo lại sau {item.text}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className="flex items-center justify-between w-full my-4">

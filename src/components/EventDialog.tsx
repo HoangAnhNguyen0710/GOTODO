@@ -60,22 +60,27 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
               {items[Number(event.calendarId) - 1]}
             </h4>
           </div>
-          <div className="description py-2 mr-2 mt-8">
+          <div className="description py-2 mr-2 mt-4">
+            <p className="text-gray font-bold">Description</p>
             <p className="text-sm">{body}</p>
           </div>
         </div>
         <div className="sub-info p-2 ml-9 col-span-2">
-         {event.category === 'time' && <div className="start_time">
-            <div className="deadline-label font-bold text-slate-600 text-base">
-              Bắt đầu:
+          {event.category === "time" && (
+            <div className="start_time">
+              <div className="deadline-label font-bold text-slate-600 text-base">
+                Bắt đầu:
+              </div>
+              <p className="text-orange-600 font-semibold mb-2">
+                {start &&
+                  start != "" &&
+                  moment(start.d.d).format("HH:mm | DD/MM/YYYY")}
+              </p>
             </div>
-            <p className="text-orange-600 font-semibold mb-2">
-              {start && start != "" && moment(start.d.d).format("HH:mm | DD/MM/YYYY")}
-            </p>
-          </div>}
+          )}
           <div className="deadline">
             <div className="deadline-label font-bold text-slate-600 text-base">
-              {event.category === 'time' ? 'Kết thúc:' : 'Hạn:'}
+              {event.category === "time" ? "Kết thúc:" : "Hạn:"}
             </div>
             <p className="text-orange-600 font-semibold">
               {end != "" && moment(end.d.d).format("HH:mm | DD/MM/YYYY")}

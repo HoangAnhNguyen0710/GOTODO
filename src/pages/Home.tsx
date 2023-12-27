@@ -27,7 +27,7 @@ export interface CalendarEvent {
   due_at?: string;
   is_done?: boolean;
   backgroundColor?: string;
-  borderColor?: string
+  borderColor?: string;
   color?: string;
   body?: string;
   raw?: {
@@ -216,8 +216,6 @@ function Home() {
     calendars: calendars,
     theme: theme,
   };
-
-  console.log(initialEvents);
 
   const onChange = (e: RadioChangeEvent) => {
     setType(e.target.value);

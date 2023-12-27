@@ -2,6 +2,7 @@ import { firestore } from "../config/firebase";
 import { Task } from "../models/tasks";
 import { CalendarEvent } from "../pages/Home";
 import { BACKGROUND_COLOR, BORDER_COLOR} from "../const/color";
+import { getEvents } from "./Event";
 
 // create task
 export async function createTask(task: Task) {
@@ -43,27 +44,26 @@ export async function getTaskByDocId(docId: string) {
 }
 
 // get tasks theo ngay
-export async function getDailyTasks(Day: Date, Filter: Array<string>) {
+export async function getDailyTasks(
+  Day: Date,
+  Filter: Array<string>,
+  sortType = "desc"
+) {
   if (Filter.length == 0) {
     Filter = ["-1"];
   }
-  const start = new Date(Day);
+  const start = new Date(Day)
   // start.setHours(0, 0, 0)
 
-  const end = new Date(Day);
-  end.setHours(23, 59, 59);
+  const end = new Date(Day)
+  end.setHours(23, 59, 59)
 
   return await firestore
     .collection("Tasks")
     .where("due_at", "<=", end.toISOString())
     .where("due_at", ">=", start.toISOString())
     .where("project_id", "in", Filter)
-    .orderBy("due_at", "desc");
-  //   .get();
-  // return data.docs.map((item) => ({
-  //   ...item.data(),
-  //   // docId: item.id,
-  // }));
+    .orderBy("due_at", sortType as never)
 }
 
 export async function getDailyTasksNum(Day: Date) {
@@ -150,20 +150,24 @@ export async function getMontlyTasks(Day: Date) {
 }
 
 // get task qua han
-export async function getPassDueTasks(Day: Date, Filter: Array<string>) {
+export async function getPassDueTasks(
+  Day: Date,
+  Filter: Array<string>,
+  sortType = "desc"
+) {
   if (Filter.length == 0) {
     Filter = ["-1"];
   }
-  const start = new Date(Day);
+  const start = new Date(Day)
   // start.setHours(0, 0, 0)
 
   const f = false;
-  return await firestore
-    .collection("Tasks")
-    .where("due_at", "<=", start.toISOString())
-    .where("is_done", "==", f)
-    .where("project_id", "in", Filter)
-    .orderBy("due_at", "desc");
+    return await firestore
+      .collection("Tasks")
+      .where("is_done", "==", f)
+      .where("project_id", "in", Filter)
+      .where("due_at", "<=", start.toISOString())
+      .orderBy("due_at", sortType as never)
 }
 
 // update task
@@ -229,3 +233,22 @@ export function convertToCalendarEvents(tasks: Array<Task>) {
 
   return convertedList;
 }
+export function sortDataList(){
+  return
+}
+
+
+// get all task n event trong cung 1 ngay
+export async function getDailyTasksAndEvents(Day: Date,
+  Filter: Array<string>,
+  sortType = "desc")
+  {
+    const taskData = await (await getDailyTasks(Day, Filter, sortType)).get()
+    const taskList = taskData.docs.map((item) => ({
+        ...item.data(),
+      }));
+    const taskDataList = convertToCalendarEvents(taskList as Array<Task>)
+    const eventDataList = await getEvents(Day)
+    console.log(taskDataList, eventDataList)
+    return taskDataList.concat(eventDataList)
+  }

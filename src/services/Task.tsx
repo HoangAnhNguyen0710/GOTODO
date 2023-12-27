@@ -66,6 +66,49 @@ export async function getDailyTasks(
     .orderBy("due_at", sortType as never);
 }
 
+// get tasks theo ngay
+export async function getListDayHaveTasks(
+  Day: Date,
+  Filter: Array<string>,
+  sortType = "asc"
+) {
+  if (Filter.length == 0) {
+    Filter = ["-1"];
+  }
+  const start = new Date(Day)
+  // start.setHours(0, 0, 0)
+
+
+  return await firestore
+    .collection("Tasks")
+    .where("due_at", ">=", start.toISOString())
+    .where("project_id", "in", Filter)
+    .orderBy("due_at", sortType as never)
+}
+
+// get tasks theo ngay
+export async function getDailyTasksv2(
+  Day: Date,
+  Filter: Array<string>,
+  sortType = "desc"
+) {
+  if (Filter.length == 0) {
+    Filter = ["-1"];
+  }
+  const start = new Date(Day)
+  // start.setHours(0, 0, 0)
+
+  const end = new Date(Day)
+  end.setHours(23, 59, 59)
+
+  return await firestore
+    .collection("Tasks")
+    .where("due_at", "<=", end.toISOString())
+    .where("due_at", ">=", start.toISOString())
+    .where("project_id", "in", Filter)
+    .orderBy("due_at", sortType as never)
+}
+
 export async function getDailyTasksNum(Day: Date) {
   const start = new Date(Day);
   start.setHours(0, 0, 0);

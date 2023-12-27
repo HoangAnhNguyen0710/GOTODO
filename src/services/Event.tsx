@@ -44,22 +44,27 @@ export async function getTaskByDocId(docId: string) {
 }
 
 // get events theo 1 khoang thoi gian nao do bat ki
-export async function getEvents(StartDay: Date, EndDay: Date) {
+export async function getEvents(StartDay: Date, EndDay?: Date) {
   const start = new Date(StartDay);
   start.setHours(0, 0, 0);
-
-  const end = new Date(EndDay);
-  end.setHours(23, 59, 59);
-
-  const data = await firestore
+  
+  const query = firestore
     .collection("Events")
-    .where("ended_at", "<=", end)
-    .where("started_at", ">=", start)
-    .get();
-  return data.docs.map((item) => ({
+    .where("started_at", ">=", start.toISOString())
+
+  let data
+  if(EndDay) {
+    const end = new Date(EndDay);
+    end.setHours(23, 59, 59);
+    data = await query.where("ended_at", "<=", end).get()
+  }
+  else data = await query.get()
+  const dataList = data.docs.map((item) => ({
     ...item.data(),
     // docId: item.id,
-  }));
+  }))
+  const convertedList = convertEventToCalendarEvents(dataList as Array<Event>);
+  return convertedList;
 }
 
 // get events theo 1 khoang thoi gian nao do bat ki
@@ -93,6 +98,9 @@ export async function updateTask(docId: string | undefined, event: Event) {
       console.error("Update event failed!", error);
     });
 }
+
+const color = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"];
+
 export function convertEventToCalendarEvents(events: Array<Event>) {
   const convertedList: Array<CalendarEvent> = [];
 

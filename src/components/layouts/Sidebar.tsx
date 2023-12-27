@@ -4,7 +4,7 @@ import { Link, useMatch } from "react-router-dom";
 import { SlCalender } from "react-icons/sl";
 import { FaTasks } from "react-icons/fa";
 import { Button } from "antd";
-import { CaretDownOutlined } from "@ant-design/icons";
+import { CaretDownOutlined, CaretLeftOutlined } from "@ant-design/icons";
 import CreateEventDialog from "../popup/CreateEventDialog";
 import CreateTaskDialog from "../popup/CreateTaskDialog";
 import { getDailyTasksNum } from "../../services/Task";
@@ -169,10 +169,12 @@ const Sidebar = () => {
             </Button>
           </Link>
         </div>
-        <div className="px-6">
-          <div className="font-bold text-base mt-8">
-            Công việc của tôi
-            <CaretDownOutlined className="ml-10" onClick={changeDropDown} />
+        <div className="p-2 bg-white rounded-md mt-4 shadow-md">
+          <div className="font-bold text-base flex justify-between p-2 items-center">
+            <p className="p-1">Công việc của tôi</p>
+            <div onClick={changeDropDown}>
+              {dropDown ? <CaretDownOutlined /> : <CaretLeftOutlined />}
+            </div>
           </div>
           {dropDown ? (
             items.map((item) => (

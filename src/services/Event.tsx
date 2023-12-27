@@ -1,7 +1,7 @@
 import { firestore } from "../config/firebase";
 import Event from "../models/events";
 import { CalendarEvent } from "../pages/Home";
-import { BACKGROUND_COLOR, BORDER_COLOR} from "../const/color";
+import { BACKGROUND_COLOR, BORDER_COLOR } from "../const/color";
 
 // create event
 export async function createEvent(event: Event) {
@@ -47,22 +47,21 @@ export async function getTaskByDocId(docId: string) {
 export async function getEvents(StartDay: Date, EndDay?: Date) {
   const start = new Date(StartDay);
   start.setHours(0, 0, 0);
-  
+
   const query = firestore
     .collection("Events")
-    .where("started_at", ">=", start.toISOString())
+    .where("started_at", ">=", start.toISOString());
 
-  let data
-  if(EndDay) {
+  let data;
+  if (EndDay) {
     const end = new Date(EndDay);
     end.setHours(23, 59, 59);
-    data = await query.where("ended_at", "<=", end).get()
-  }
-  else data = await query.get()
+    data = await query.where("ended_at", "<=", end).get();
+  } else data = await query.get();
   const dataList = data.docs.map((item) => ({
     ...item.data(),
     // docId: item.id,
-  }))
+  }));
   const convertedList = convertEventToCalendarEvents(dataList as Array<Event>);
   return convertedList;
 }
@@ -120,8 +119,8 @@ export function convertEventToCalendarEvents(events: Array<Event>) {
       },
       backgroundColor: BACKGROUND_COLOR[Number(value.priority)],
       borderColor: BORDER_COLOR[Number(value.priority)],
-      state: 'state here'
-    }
+      state: "state here",
+    };
 
     convertedList.push(convertedData);
   });

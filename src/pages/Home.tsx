@@ -234,6 +234,7 @@ function Home() {
     useDetailPopup: false,
     useFormPopup: false,
     events: initialEvents.concat(initialTasks),
+    isReadOnly:true,
     gridSelection: false,
     calendars: calendars,
     theme: theme,

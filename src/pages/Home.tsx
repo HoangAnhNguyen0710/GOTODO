@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { Task } from "../models/tasks";
 import Event from "../models/events";
+import { BACKGROUND_COLOR, BORDER_COLOR } from "../const/color";
 
 export interface CalendarEvent {
   id: string;
@@ -27,7 +28,7 @@ export interface CalendarEvent {
   due_at?: string;
   is_done?: boolean;
   backgroundColor?: string;
-  borderColor?: string
+  borderColor?: string;
   color?: string;
   body?: string;
   raw?: {
@@ -90,23 +91,14 @@ function Home() {
     getAllEv();
   }, [eventFilter]);
   const theme = {
-    week: {
-      nowIndicatorLabel: {
-        color: "red",
-      },
-      nowIndicatorPast: {
-        border: "1px dashed red",
-      },
-      nowIndicatorBullet: {
-        backgroundColor: "red",
-      },
-      nowIndicatorToday: {
-        border: "1px solid red",
-      },
-      nowIndicatorFuture: {
-        border: "1px solid red",
+    common: {
+      gridSelection: {
+        backgroundColor: "rgba(81, 92, 230, 0.05)",
+        border: "4px solid #515ce6",
       },
     },
+    // week: WeekTheme;
+    // month: MonthTheme;
   };
 
   const onClose = () => setOpenModal(false);
@@ -130,6 +122,36 @@ function Home() {
 
     setStartDate(dateStart);
     setEndDate(dateEnd);
+
+    calendarInstance.setOptions({
+      template: {
+        time(event) {
+          return (
+            `<div class="flex flex-col justify-start">
+              <div class="whitespace-normal flex flex-row gap-2">
+                <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
+                  ${moment(event.start.toDate()).format("HH:MM")}
+                </div>
+                <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
+                  ${moment(event.end.toDate()).format("HH:MM")}
+                </div>
+              </div>
+              <div class="whitespace-normal font-semibold">${event.title}</div>
+            </div>`
+          )
+        },
+        task(event) {
+          return (
+            `<div class="flex flex-row justify-start gap-2">
+              <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
+                  ${moment(event.end.toDate()).format("HH:MM")}
+              </div>
+              <div class="whitespace-normal font-semibold">${event.title}</div>
+            </div>`
+          )
+        },
+      },
+    });
   };
 
   const handleClickNextButton = () => {

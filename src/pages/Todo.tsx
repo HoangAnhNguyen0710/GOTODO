@@ -1,4 +1,5 @@
 import {
+  CaretRightOutlined,
   CaretDownOutlined,
   CalendarOutlined,
   EyeOutlined,
@@ -166,7 +167,7 @@ const Todo = () => {
           updateTaskStatement={updateSelectedTaskStatement}
         />
       )}
-      <div className="max-w-7xl px-2 mx-16 mt-16 font-montserrat bg-white drop-shadow-md rounded-lg">
+      <div className="max-w-7xl px-2 font-montserrat bg-white drop-shadow-md h-[calc(100vh-40px)] rounded-lg">
         <div className="header p-2 mb-2 flex justify-between">
           <div className="flex">
           <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
@@ -245,10 +246,11 @@ const Todo = () => {
         </div>
         <div className="pastdue-tasks p-1 my-4">
           <div className="flex">
-            <CaretDownOutlined
+            <div
               className="p-2"
               onClick={changePastdueDropDown}
-            />
+            >
+              { pastdueDropDown ? <CaretDownOutlined></CaretDownOutlined> :  <CaretRightOutlined/>}</div>
             <h3 className="p-2 font-bold text-lg text-red-500">Quá hạn</h3>
           </div>
           {pastdueDropDown ? (
@@ -297,7 +299,9 @@ const Todo = () => {
         </div>
         <div className="today-tasks p-1 my-4">
           <div className="flex">
-            <CaretDownOutlined className="p-2" onClick={changeTodayDropDown} />
+            <div className="p-2" onClick={ changeTodayDropDown } >
+              { todayDropDown ? <CaretDownOutlined /> : <CaretRightOutlined/>}
+            </div>
             <h3 className="p-2 font-bold text-lg text-black-500">
               Việc hiện tại
             </h3>

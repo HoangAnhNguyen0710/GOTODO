@@ -148,8 +148,8 @@ const Sidebar = () => {
             <Button
               className={
                 state === 0
-                  ? "bg-white w-32 h-32 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center"
-                  : "bg-slate-100 w-32 h-32 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"
+                  ? "bg-white w-36 h-36 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center"
+                  : "bg-slate-100 w-36 h-36 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"
               }
             >
               <FaTasks className="text-4xl mt-8 mb-2" />
@@ -160,8 +160,8 @@ const Sidebar = () => {
             <Button
               className={
                 state === 1
-                  ? "bg-white w-32 h-32 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center"
-                  : "bg-slate-100 w-32 h-32 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"
+                  ? "bg-white w-36 h-36 uppercase font-bold border-none border-white shadow-md text-blue-600 flex flex-col items-center"
+                  : "bg-slate-100 w-36 h-36 uppercase font-bold border-none shadow border-slate-700 text-slate-500 flex flex-col items-center"
               }
             >
               <SlCalender className="text-4xl mt-8 mb-2" />

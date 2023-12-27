@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 import { getDailyTasks, getDailyTasksAndEvents, getListDayHaveTasks, getPassDueTasks, updateTask } from "../services/Task";
+
 import moment from "moment";
 import "moment/locale/vi";
 import { Task } from "../models/tasks";
@@ -13,9 +14,16 @@ import { EventDialog } from "../components";
 import { CalendarEvent } from "./Home";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { Box, Button, MenuItem, Popover, Select, Typography } from "@mui/material";
-import SortRoundedIcon from '@mui/icons-material/SortRounded';
-import ImportExportRoundedIcon from '@mui/icons-material/ImportExportRounded';
+import {
+  Box,
+  Button,
+  MenuItem,
+  Popover,
+  Select,
+  Typography,
+} from "@mui/material";
+import SortRoundedIcon from "@mui/icons-material/SortRounded";
+import ImportExportRoundedIcon from "@mui/icons-material/ImportExportRounded";
 
 const Todo = () => {
   const [listDay, setListDay] = useState([]);
@@ -27,13 +35,14 @@ const Todo = () => {
   const [event, setEvent] = useState<CalendarEvent>();
   const [selectedTask, setSelectedTask] = useState<Task>();
   const taskFilter = useSelector((state: RootState) => state.taskFilter.value);
-  const [sortBy, setSortBy] = useState<string>("due_at")
-  const [sortType, setSortType] = useState<string>("desc")
+  const [sortBy, setSortBy] = useState<string>("due_at");
+  const [sortType, setSortType] = useState<string>("desc");
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
-  )
-  const open = Boolean(anchorEl)
-  const popoverId = open ? 'simple-popover' : undefined
+  );
+  const open = Boolean(anchorEl);
+  const popoverId = open ? "simple-popover" : undefined;
+
   useEffect(() => {
     async function getListDay() {
       const today = new Date();
@@ -48,13 +57,18 @@ const Todo = () => {
 
         let dataList = data.docs.map((item) => ({
           ...item.data(),
-        }))
-        if(sortBy === "priority"){
-          if(sortType === "asc"){
-            dataList = dataList.sort((a, b) => Number(a.priority) - Number(b.priority))
-          }
-          else dataList = dataList.sort((a, b) => Number(b.priority) - Number(a.priority))
+        }));
+        if (sortBy === "priority") {
+          if (sortType === "asc") {
+            dataList = dataList.sort(
+              (a, b) => Number(a.priority) - Number(b.priority)
+            );
+          } else
+            dataList = dataList.sort(
+              (a, b) => Number(b.priority) - Number(a.priority)
+            );
         }
+
         setTodayTasks(dataList as Array<Task>);
         
         setListDay(uniqueDates);
@@ -86,26 +100,28 @@ const Todo = () => {
       ).onSnapshot((data) => {
         let dataList = data.docs.map((item) => ({
           ...item.data(),
-        }))
-        if(sortBy === "priority"){
-          if(sortType === "asc"){
-            dataList = dataList.sort((a, b) => Number(a.priority) - Number(b.priority))
-          }
-          else dataList = dataList.sort((a, b) => Number(b.priority) - Number(a.priority))
+        }));
+        if (sortBy === "priority") {
+          if (sortType === "asc") {
+            dataList = dataList.sort(
+              (a, b) => Number(a.priority) - Number(b.priority)
+            );
+          } else
+            dataList = dataList.sort(
+              (a, b) => Number(b.priority) - Number(a.priority)
+            );
         }
         console.log(dataList)
         setPastdueTasks(dataList as Array<Task>)
       });
     }
     getPassdueTasks();
-    async function getTodayTasksAndEvents() {
-      return await getDailyTasksAndEvents(new Date(), taskFilter, sortType)
-    }
-    getTodayTasksAndEvents()
   }, [taskFilter, sortBy, sortType]);
+
   const changePastdueDropDown = () => {
     setPastdueDropDown(!pastdueDropDown);
   };
+
   const changeTodayDropDown = () => {
     setTodayDropDown(!todayDropDown);
   };
@@ -200,10 +216,10 @@ const Todo = () => {
       <div className="max-w-7xl px-2 font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="header p-2 mb-2 flex justify-between">
           <div className="flex">
-          <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
-          <h4 className="date p-3 text-sm font-normal">
-            {moment(new Date()).locale("vi").format("dddd, MMMM Do")}
-          </h4>
+            <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
+            <h4 className="date p-3 text-sm font-normal">
+              {moment(new Date()).locale("vi").format("dddd, MMMM Do")}
+            </h4>
           </div>
           <Button
             id={popoverId}
@@ -218,57 +234,61 @@ const Todo = () => {
             anchorEl={anchorEl}
             onClose={handleCloseSortPopover}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
+              vertical: "bottom",
+              horizontal: "right",
             }}
             transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
+              vertical: "top",
+              horizontal: "right",
             }}
           >
             <Box sx={{ p: 2, fontSize: 14 }} width={300}>
               <div className="flex flex-col font-semibold text-slate-600">
                 <div className="flex justify-between items-center mb-4 mt-2">
-                  <SortRoundedIcon/>
+                  <SortRoundedIcon />
                   <span className="pl-2">Danh sách Công việc</span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <div>
-                   <ImportExportRoundedIcon/>
-                   <span className="px-2">Sắp xếp theo</span>
+                    <ImportExportRoundedIcon />
+                    <span className="px-2">Sắp xếp theo</span>
                   </div>
                   <Select
-                      sx={{ width: 110, padding: 0}}
-                      size="small"
-                      name="project-id"
-                      value={sortBy}
-                      onChange={(ev: any) =>
-                        setSortBy(ev.target.value)
-                      }
-                      variant="standard"
-                      >
-                      <MenuItem sx={{ px: 2 }} value={"priority"}>Độ ưu tiên</MenuItem>
-                      <MenuItem sx={{ px: 2 }} value={"due_at"}>Deadline</MenuItem>
-                    </Select>
+                    sx={{ width: 110, padding: 0 }}
+                    size="small"
+                    name="project-id"
+                    value={sortBy}
+                    onChange={(ev: any) => setSortBy(ev.target.value)}
+                    variant="standard"
+                  >
+                    <MenuItem sx={{ px: 2 }} value={"priority"}>
+                      Độ ưu tiên
+                    </MenuItem>
+                    <MenuItem sx={{ px: 2 }} value={"due_at"}>
+                      Deadline
+                    </MenuItem>
+                  </Select>
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                   <ImportExportRoundedIcon/>
-                   <span className="px-2">Thứ tự sắp xếp</span>
+                    <ImportExportRoundedIcon />
+                    <span className="px-2">Thứ tự sắp xếp</span>
                   </div>
                   <Select
-                      sx={{ width: 80, padding: 0}}
-                      size="small"
-                      name="project-id"
-                      value={sortType}
-                      onChange={(ev: any) =>
-                        setSortType(ev.target.value)
-                      }
-                      variant="standard"
-                      >
-                      <MenuItem sx={{ px: 2 }} value={"desc"}>Giảm</MenuItem>
-                      <MenuItem sx={{ px: 2 }} value={"asc"}>Tăng</MenuItem>
-                    </Select>
+                    sx={{ width: 80, padding: 0 }}
+                    size="small"
+                    name="project-id"
+                    value={sortType}
+                    onChange={(ev: any) => setSortType(ev.target.value)}
+                    variant="standard"
+                  >
+                    <MenuItem sx={{ px: 2 }} value={"desc"}>
+                      Giảm
+                    </MenuItem>
+                    <MenuItem sx={{ px: 2 }} value={"asc"}>
+                      Tăng
+                    </MenuItem>
+                  </Select>
                 </div>
               </div>
             </Box>

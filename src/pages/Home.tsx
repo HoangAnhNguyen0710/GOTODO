@@ -240,8 +240,6 @@ function Home() {
     theme: theme,
   };
 
-  console.log(initialEvents);
-
   const onChange = (e: RadioChangeEvent) => {
     setType(e.target.value);
   };

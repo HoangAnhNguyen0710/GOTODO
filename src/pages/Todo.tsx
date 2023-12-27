@@ -5,7 +5,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import { getDailyTasks, getDailyTasksAndEvents, getPassDueTasks, updateTask } from "../services/Task";
+import { getDailyTasks, getDailyTasksAndEvents, getListDayHaveTasks, getPassDueTasks, updateTask } from "../services/Task";
 import moment from "moment";
 import "moment/locale/vi";
 import { Task } from "../models/tasks";
@@ -18,6 +18,7 @@ import SortRoundedIcon from '@mui/icons-material/SortRounded';
 import ImportExportRoundedIcon from '@mui/icons-material/ImportExportRounded';
 
 const Todo = () => {
+  const [listDay, setListDay] = useState([]);
   const [todayTasks, setTodayTasks] = useState<Array<Task>>([]);
   const [pastdueTasks, setPastdueTasks] = useState<Array<Task>>([]);
   const [openModal, setOpenModal] = useState(false);
@@ -34,11 +35,17 @@ const Todo = () => {
   const open = Boolean(anchorEl)
   const popoverId = open ? 'simple-popover' : undefined
   useEffect(() => {
-    async function getTodayTasks() {
+    async function getListDay() {
       const today = new Date();
       await (
-        await getDailyTasks(today, taskFilter, sortType)
+        await getListDayHaveTasks(today, taskFilter, 'asc')
       ).onSnapshot((data) => {
+        const uniqueDates = [...new Set(data.docs.map(item => 
+            moment(item.data().due_at).format("YYYY/MM/DD")
+          ))];
+
+        console.log(uniqueDates);
+
         let dataList = data.docs.map((item) => ({
           ...item.data(),
         }))
@@ -49,9 +56,29 @@ const Todo = () => {
           else dataList = dataList.sort((a, b) => Number(b.priority) - Number(a.priority))
         }
         setTodayTasks(dataList as Array<Task>);
+        
+        setListDay(uniqueDates);
       });
     }
-    getTodayTasks();
+    getListDay();
+    // async function getTodayTasks() {
+    //   const today = new Date();
+    //   await (
+    //     await getDailyTasks(today, taskFilter, sortType)
+    //   ).onSnapshot((data) => {
+    //     let dataList = data.docs.map((item) => ({
+    //       ...item.data(),
+    //     }))
+    //     if(sortBy === "priority"){
+    //       if(sortType === "asc"){
+    //         dataList = dataList.sort((a, b) => Number(a.priority) - Number(b.priority))
+    //       }
+    //       else dataList = dataList.sort((a, b) => Number(b.priority) - Number(a.priority))
+    //     }
+    //     setTodayTasks(dataList as Array<Task>);
+    //   });
+    // }
+    // getTodayTasks();
     async function getPassdueTasks() {
       const today = new Date();
       await (
@@ -66,6 +93,7 @@ const Todo = () => {
           }
           else dataList = dataList.sort((a, b) => Number(b.priority) - Number(a.priority))
         }
+        console.log(dataList)
         setPastdueTasks(dataList as Array<Task>)
       });
     }
@@ -157,6 +185,8 @@ const Todo = () => {
       setPastdueTasks([...pastdueTasks]);
     }
   };
+  console.log(listDay);
+  
   return (
     <React.Fragment>
       {event && (
@@ -167,7 +197,7 @@ const Todo = () => {
           updateTaskStatement={updateSelectedTaskStatement}
         />
       )}
-      <div className="max-w-7xl px-2 font-montserrat bg-white drop-shadow-md h-[calc(100vh-40px)] rounded-lg">
+      <div className="max-w-7xl px-2 font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="header p-2 mb-2 flex justify-between">
           <div className="flex">
           <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
@@ -297,7 +327,7 @@ const Todo = () => {
             <></>
           )}
         </div>
-        <div className="today-tasks p-1 my-4">
+        {/* <div className="today-tasks p-1 my-4">
           <div className="flex">
             <div className="p-2" onClick={ changeTodayDropDown } >
               { todayDropDown ? <CaretDownOutlined /> : <CaretRightOutlined/>}
@@ -306,46 +336,63 @@ const Todo = () => {
               Việc hiện tại
             </h3>
           </div>
-          {todayDropDown ? (
-            todayTasks.map((todayTask: Task, index: number) => (
-              <div
-                className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
-                key={todayTask.id}
-              >
-                {todayTask.is_done == true ? (
-                  <button
-                    className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"
-                    onClick={() => updateTodayTaskStatement(todayTask, index)}
-                  ></button>
-                ) : (
-                  <button
-                    className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"
-                    onClick={() => updateTodayTaskStatement(todayTask, index)}
-                  ></button>
-                )}
+        </div> */}
+        {listDay.length>0 ? (
+          listDay.map((date:string, index: number) => (
+            <div className="today-tasks p-1 my-4">
+              <div className="flex">
+                <div className="p-2" onClick={ changeTodayDropDown } >
+                  { todayDropDown ? <CaretDownOutlined /> : <CaretRightOutlined/>}
+                </div>
+                <h3 className="p-2 font-bold text-lg text-black-500">
+                  {moment(date).format("YYYY/MM/DD")}
+                </h3>
+              </div>
+              {todayDropDown ? (
+              todayTasks.filter((task:Task) => moment(task.due_at).format("YYYY/MM/DD") === date).map((todayTask: Task, index: number) => (
                 <div
-                  className="detail-task mx-10 w-full cursor-pointer"
-                  onClick={() => handleClickTask(todayTask)}
+                  className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
+                  key={todayTask.id}
                 >
-                  <h2 className="p-1 font-semibold text-base">
-                    {todayTask.title}
-                  </h2>
-                  <div className="description">
-                    <p className="font-extralight text-xs mb-1">
-                      {todayTask.description}
-                    </p>
-                  </div>
-                  <div className="date font-extralight text-xs text-red-500">
-                    <CalendarOutlined className="mr-1" />
-                    {moment(todayTask.due_at).format("YYYY/MM/DD  HH:MM")}
+                  {todayTask.is_done == true ? (
+                    <button
+                      className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"
+                      onClick={() => updateTodayTaskStatement(todayTask, index)}
+                    ></button>
+                  ) : (
+                    <button
+                      className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"
+                      onClick={() => updateTodayTaskStatement(todayTask, index)}
+                    ></button>
+                  )}
+                  <div
+                    className="detail-task mx-10 w-full cursor-pointer"
+                    onClick={() => handleClickTask(todayTask)}
+                  >
+                    <h2 className="p-1 font-semibold text-base">
+                      {todayTask.title}
+                    </h2>
+                    <div className="description">
+                      <p className="font-extralight text-xs mb-1">
+                        {todayTask.description}
+                      </p>
+                    </div>
+                    <div className="date font-extralight text-xs text-red-500">
+                      <CalendarOutlined className="mr-1" />
+                      {moment(todayTask.due_at).format("YYYY/MM/DD  HH:MM")}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <></>
-          )}
-        </div>
+              ))
+            ) : (
+              <></>
+            )}
+            </div>
+          ))
+        ) : (
+          <></>
+        )}
+        
       </div>
     </React.Fragment>
   );

@@ -288,7 +288,7 @@ const Todo = () => {
                   </div>
                   <div className="date font-extralight text-xs text-red-500">
                     <CalendarOutlined className="mr-1" />
-                    {moment(pastdueTask.due_at).format("DD/MM")}
+                    {moment(pastdueTask.due_at).format("YYYY/MM/DD  HH:MM")}
                   </div>
                 </div>
               </div>
@@ -334,6 +334,10 @@ const Todo = () => {
                     <p className="font-extralight text-xs mb-1">
                       {todayTask.description}
                     </p>
+                  </div>
+                  <div className="date font-extralight text-xs text-red-500">
+                    <CalendarOutlined className="mr-1" />
+                    {moment(todayTask.due_at).format("YYYY/MM/DD  HH:MM")}
                   </div>
                 </div>
               </div>

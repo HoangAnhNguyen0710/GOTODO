@@ -7,7 +7,6 @@ import {
 import React, { useState, useEffect } from "react";
 import { getDailyTasks, getDailyTasksAndEvents, getPassDueTasks, updateTask } from "../services/Task";
 import moment from "moment";
-import "moment/locale/vi";
 import { Task } from "../models/tasks";
 import { EventDialog } from "../components";
 import { CalendarEvent } from "./Home";
@@ -31,6 +30,8 @@ const Todo = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   )
+  const currentTime = moment(new Date()).format("YYYY/MM/DD")
+
   const open = Boolean(anchorEl)
   const popoverId = open ? 'simple-popover' : undefined
   useEffect(() => {
@@ -113,14 +114,14 @@ const Todo = () => {
 
   const handleClickTask = (event: Task) => {
     const calendarEvent = convertToCalendarEvent(event);
-    console.log(calendarEvent);
+    // console.log(calendarEvent);
     setEvent(calendarEvent);
     setSelectedTask(event);
     setOpenModal(true);
   };
 
   useEffect(() => {
-    console.log(selectedTask);
+    // console.log(selectedTask);
   }, [selectedTask]);
   const updateSelectedTaskStatement = async () => {
     if (selectedTask && event) {
@@ -172,7 +173,7 @@ const Todo = () => {
           <div className="flex">
           <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
           <h4 className="date p-3 text-sm font-normal">
-            {moment(new Date()).locale("vi").format("dddd, MMMM Do")}
+            {currentTime}
           </h4>
           </div>
           <Button

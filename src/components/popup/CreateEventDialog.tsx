@@ -119,7 +119,7 @@ export default function CreateEventDialog({
     }
     eventCopy.reminders = [...reminders];
     if (validateEvent(eventCopy)) {
-      console.log(eventCopy);
+      // console.log(eventCopy);
       await createEvent(eventCopy)
         .then(() => {
           toast.success(
@@ -151,7 +151,7 @@ export default function CreateEventDialog({
       const index = remindersCopy.indexOf(value);
       if (index !== -1) remindersCopy.splice(index, 1);
     }
-    console.log(remindersCopy);
+    // console.log(remindersCopy);
     setReminders(remindersCopy);
   };
 

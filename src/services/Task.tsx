@@ -249,6 +249,6 @@ export async function getDailyTasksAndEvents(Day: Date,
       }));
     const taskDataList = convertToCalendarEvents(taskList as Array<Task>)
     const eventDataList = await getEvents(Day)
-    console.log(taskDataList, eventDataList)
+    // console.log(taskDataList, eventDataList)
     return taskDataList.concat(eventDataList)
   }

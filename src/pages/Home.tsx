@@ -108,7 +108,7 @@ function Home() {
 
     setEvent(event);
     setOpenModal(true);
-    console.log(event);
+    // console.log(event);
   };
   const onAfterRenderEvent = () => {
     const calendarInstance = calendarRef.current?.getInstance();
@@ -239,7 +239,7 @@ function Home() {
     theme: theme,
   };
 
-  console.log(initialEvents);
+  // console.log(initialEvents);
 
   const onChange = (e: RadioChangeEvent) => {
     setType(e.target.value);

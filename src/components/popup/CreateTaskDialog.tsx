@@ -111,7 +111,7 @@ export default function CreateTaskDialog({
     }
     taskCopy.reminders = [...reminders];
     if (validateTask(taskCopy)) {
-      console.log(taskCopy);
+      // console.log(taskCopy);
       await createTask(taskCopy)
         .then(() => {
           toast.success(

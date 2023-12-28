@@ -15,7 +15,7 @@ body {
   font-family: "montserrat", sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f7f8fa
+  background-color: #f7f8fa;
 }
 
 * {
@@ -80,4 +80,8 @@ input[type="radio"]::before {
 
 input[type="radio"]:checked::before {
   transform: scale(1);
+}
+
+.toastui-calendar-day-names .toastui-calendar-week {
+  overflow: hidden !important;
 }

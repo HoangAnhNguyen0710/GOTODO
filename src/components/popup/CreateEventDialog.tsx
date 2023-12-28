@@ -18,6 +18,8 @@ import { createEvent } from "../../services/Event";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { ToastContainer, toast } from "react-toast";
+import { useDispatch } from "react-redux";
+import { setNewObjectCounter } from "../../redux/counter.reducer";
 
 export interface CreateEventFormProps {
   open: boolean;
@@ -66,7 +68,7 @@ export default function CreateEventDialog({
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()));
   const [reminders, setReminders] = useState<number[]>([DEFAULT_REMINDER]);
   const [openReminder, setOpenReminder] = useState(false);
-
+  const dispatch = useDispatch();
   const handleChangeEvent = (
     ev: FormEvent<HTMLInputElement> | FormEvent<HTMLSelectElement> | any
   ) => {
@@ -130,6 +132,7 @@ export default function CreateEventDialog({
         })
         .finally(() => {
           setEvent(initialEventData);
+          dispatch(setNewObjectCounter(1));
           closeDialog();
         });
     }
@@ -138,6 +141,7 @@ export default function CreateEventDialog({
   const closeDialog = () => {
     handleClose();
     setReminders([DEFAULT_REMINDER]);
+    setOpenReminder(false);
   };
 
   const handleReminderChange = (

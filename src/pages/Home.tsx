@@ -234,12 +234,11 @@ function Home() {
     useDetailPopup: false,
     useFormPopup: false,
     events: initialEvents.concat(initialTasks),
+    isReadOnly:true,
     gridSelection: false,
     calendars: calendars,
     theme: theme,
   };
-
-  // console.log(initialEvents);
 
   const onChange = (e: RadioChangeEvent) => {
     setType(e.target.value);

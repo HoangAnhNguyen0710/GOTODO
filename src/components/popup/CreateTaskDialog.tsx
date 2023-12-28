@@ -18,6 +18,8 @@ import { Task } from "../../models/tasks";
 import { createTask } from "../../services/Task";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { ToastContainer, toast } from "react-toast";
+import { useDispatch } from "react-redux";
+import { setNewObjectCounter } from "../../redux/counter.reducer";
 
 export interface CreateEventFormProps {
   open: boolean;
@@ -56,6 +58,7 @@ export default function CreateTaskDialog({
   const [reminders, setReminders] = useState<number[]>([DEFAULT_REMINDER]);
   const [openReminder, setOpenReminder] = useState(false);
   const [endTime, setEndTime] = useState<Dayjs>(dayjs(Date.now()));
+  const dispatch = useDispatch();
 
   const priorityColors = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"];
 
@@ -123,6 +126,7 @@ export default function CreateTaskDialog({
         .finally(() => {
           setTask(initialTaskData);
           closeDialog();
+          dispatch(setNewObjectCounter(1));
         });
     }
   };
@@ -130,6 +134,7 @@ export default function CreateTaskDialog({
   const closeDialog = () => {
     handleClose();
     setReminders([DEFAULT_REMINDER]);
+    setOpenReminder(false);
   };
 
   return (

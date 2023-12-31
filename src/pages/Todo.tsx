@@ -25,7 +25,7 @@ import SortRoundedIcon from "@mui/icons-material/SortRounded";
 import ImportExportRoundedIcon from "@mui/icons-material/ImportExportRounded";
 
 const Todo = () => {
-  const [listDay, setListDay] = useState([]);
+  const [listDay, setListDay] = useState<Array<string>>([]);
   const [todayTasks, setTodayTasks] = useState<Array<Task>>([]);
   const [pastdueTasks, setPastdueTasks] = useState<Array<Task>>([]);
   const [openModal, setOpenModal] = useState(false);
@@ -47,7 +47,7 @@ const Todo = () => {
     async function getListDay() {
       const today = new Date();
       await (
-        await getListDayHaveTasks(today, taskFilter, 'asc')
+        await getListDayHaveTasks(today, taskFilter, sortType)
       ).onSnapshot((data) => {
         const uniqueDates = [...new Set(data.docs.map(item => 
             moment(item.data().due_at).format("YYYY/MM/DD")
@@ -58,6 +58,9 @@ const Todo = () => {
         let dataList = data.docs.map((item) => ({
           ...item.data(),
         }));
+
+        console.log(dataList)
+
         if (sortBy === "priority") {
           if (sortType === "asc") {
             dataList = dataList.sort(
@@ -358,7 +361,7 @@ const Todo = () => {
           </div>
         </div> */}
         {listDay.length>0 ? (
-          listDay.map((date:string, index: number) => (
+          listDay.map((date:string) => (
             <div className="today-tasks p-1 my-4">
               <div className="flex">
                 <div className="p-2" onClick={ changeTodayDropDown } >
@@ -369,7 +372,8 @@ const Todo = () => {
                 </h3>
               </div>
               {todayDropDown ? (
-              todayTasks.filter((task:Task) => moment(task.due_at).format("YYYY/MM/DD") === date).map((todayTask: Task, index: number) => (
+              todayTasks.map((todayTask: Task, index: number) => (
+                moment(todayTask.due_at).format("YYYY/MM/DD") === date  && (
                 <div
                   className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
                   key={todayTask.id}
@@ -402,7 +406,7 @@ const Todo = () => {
                       {moment(todayTask.due_at).format("YYYY/MM/DD  HH:MM")}
                     </div>
                   </div>
-                </div>
+                </div>)
               ))
             ) : (
               <></>

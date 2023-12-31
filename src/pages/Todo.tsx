@@ -8,7 +8,6 @@ import React, { useState, useEffect } from "react";
 import { getDailyTasks, getDailyTasksAndEvents, getListDayHaveTasks, getPassDueTasks, updateTask } from "../services/Task";
 
 import moment from "moment";
-import "moment/locale/vi";
 import { Task } from "../models/tasks";
 import { EventDialog } from "../components";
 import { CalendarEvent } from "./Home";
@@ -26,7 +25,7 @@ import SortRoundedIcon from "@mui/icons-material/SortRounded";
 import ImportExportRoundedIcon from "@mui/icons-material/ImportExportRounded";
 
 const Todo = () => {
-  const [listDay, setListDay] = useState([]);
+  const [listDay, setListDay] = useState<Array<string>>([]);
   const [todayTasks, setTodayTasks] = useState<Array<Task>>([]);
   const [pastdueTasks, setPastdueTasks] = useState<Array<Task>>([]);
   const [openModal, setOpenModal] = useState(false);
@@ -39,15 +38,16 @@ const Todo = () => {
   const [sortType, setSortType] = useState<string>("desc");
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
-  );
-  const open = Boolean(anchorEl);
-  const popoverId = open ? "simple-popover" : undefined;
+  )
+  const currentTime = moment(new Date()).format("YYYY/MM/DD")
 
+  const open = Boolean(anchorEl)
+  const popoverId = open ? 'simple-popover' : undefined
   useEffect(() => {
     async function getListDay() {
       const today = new Date();
       await (
-        await getListDayHaveTasks(today, taskFilter, 'asc')
+        await getListDayHaveTasks(today, taskFilter, sortType)
       ).onSnapshot((data) => {
         const uniqueDates = [...new Set(data.docs.map(item => 
             moment(item.data().due_at).format("YYYY/MM/DD")
@@ -58,6 +58,9 @@ const Todo = () => {
         let dataList = data.docs.map((item) => ({
           ...item.data(),
         }));
+
+        console.log(dataList)
+
         if (sortBy === "priority") {
           if (sortType === "asc") {
             dataList = dataList.sort(
@@ -157,14 +160,14 @@ const Todo = () => {
 
   const handleClickTask = (event: Task) => {
     const calendarEvent = convertToCalendarEvent(event);
-    console.log(calendarEvent);
+    // console.log(calendarEvent);
     setEvent(calendarEvent);
     setSelectedTask(event);
     setOpenModal(true);
   };
 
   useEffect(() => {
-    console.log(selectedTask);
+    // console.log(selectedTask);
   }, [selectedTask]);
   const updateSelectedTaskStatement = async () => {
     if (selectedTask && event) {
@@ -216,10 +219,10 @@ const Todo = () => {
       <div className="max-w-7xl px-2 font-montserrat bg-white drop-shadow-md rounded-lg">
         <div className="header p-2 mb-2 flex justify-between">
           <div className="flex">
-            <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
-            <h4 className="date p-3 text-sm font-normal">
-              {moment(new Date()).locale("vi").format("dddd, MMMM Do")}
-            </h4>
+          <h2 className="today p-2 mr-4 font-black text-xl">Hôm nay</h2>
+          <h4 className="date p-3 text-sm font-normal">
+            {currentTime}
+          </h4>
           </div>
           <Button
             id={popoverId}
@@ -358,7 +361,7 @@ const Todo = () => {
           </div>
         </div> */}
         {listDay.length>0 ? (
-          listDay.map((date:string, index: number) => (
+          listDay.map((date:string) => (
             <div className="today-tasks p-1 my-4">
               <div className="flex">
                 <div className="p-2" onClick={ changeTodayDropDown } >
@@ -369,7 +372,8 @@ const Todo = () => {
                 </h3>
               </div>
               {todayDropDown ? (
-              todayTasks.filter((task:Task) => moment(task.due_at).format("YYYY/MM/DD") === date).map((todayTask: Task, index: number) => (
+              todayTasks.map((todayTask: Task, index: number) => (
+                moment(todayTask.due_at).format("YYYY/MM/DD") === date  && (
                 <div
                   className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
                   key={todayTask.id}
@@ -402,7 +406,7 @@ const Todo = () => {
                       {moment(todayTask.due_at).format("YYYY/MM/DD  HH:MM")}
                     </div>
                   </div>
-                </div>
+                </div>)
               ))
             ) : (
               <></>

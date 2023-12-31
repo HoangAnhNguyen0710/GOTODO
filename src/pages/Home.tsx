@@ -108,7 +108,7 @@ function Home() {
 
     setEvent(event);
     setOpenModal(true);
-    console.log(event);
+    // console.log(event);
   };
   const onAfterRenderEvent = () => {
     const calendarInstance = calendarRef.current?.getInstance();

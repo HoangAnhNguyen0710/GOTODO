@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Dialog, DialogProps } from "@mui/material";
 import * as React from "react";
 import { CalendarEvent } from "../pages/Home";

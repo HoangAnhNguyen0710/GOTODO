@@ -129,11 +129,11 @@ function Home() {
           return (
             `<div class="flex flex-col justify-start">
               <div class="whitespace-normal flex flex-row gap-2">
-                <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
-                  ${moment(event.start.toDate()).format("HH:MM")}
+                <div class="rounded-md py-0.5 px-1 text-xs font-semibold" style="background-color:${event.borderColor}; ">
+                  ${moment(event.start.d.d).format("HH:mm")}
                 </div>
-                <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
-                  ${moment(event.end.toDate()).format("HH:MM")}
+                <div class="rounded-md py-0.5 px-1 text-xs font-semibold" style="background-color:${event.borderColor}; ">
+                  ${moment(event.end.d.d).format("HH:mm")}
                 </div>
               </div>
               <div class="whitespace-normal font-semibold">${event.title}</div>
@@ -143,8 +143,8 @@ function Home() {
         task(event) {
           return (
             `<div class="flex flex-row justify-start gap-2">
-              <div class="rounded-md py-0.5 px-1 font-semibold" style="background-color:${event.borderColor}; ">
-                  ${moment(event.end.toDate()).format("HH:MM")}
+              <div class="rounded-md py-0.5 px-1 text-xs font-semibold" style="background-color:${event.borderColor}; ">
+                  ${moment(event.end.d.d).format("HH:mm")}
               </div>
               <div class="whitespace-normal font-semibold">${event.title}</div>
             </div>`
@@ -233,7 +233,6 @@ function Home() {
     },
     useDetailPopup: false,
     useFormPopup: false,
-    events: initialEvents.concat(initialTasks),
     isReadOnly:true,
     gridSelection: false,
     calendars: calendars,
@@ -322,6 +321,7 @@ function Home() {
             {...calendarOptions}
             onAfterRenderEvent={onAfterRenderEvent}
             onClickEvent={(event) => handleClickEvent(event)}
+            events= {initialEvents.concat(initialTasks)}
           />
           <Outlet></Outlet>
         </div>

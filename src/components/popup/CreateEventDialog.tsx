@@ -422,14 +422,24 @@ export default function CreateEventDialog({
                   onChange={(ev: any) => handleChangeEvent(ev)}
                 />
               </div>
-              <div>
-                <Button
+              <div className="flex gap-6">
+              <button
+                className="border border-gray-700 bg-slate-500 uppercase text-sm text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-slate-800 focus:outline-none focus:shadow-outline"
+                onClick={closeDialog}>
+                Hủy
+              </button>
+              <button
+                className="border border-blue-700 bg-blue-800 text-white uppercase text-sm rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+                onClick={handleSubmitForm}>
+                Tạo sự kiện mới
+              </button>
+                {/* <Button
                   type="submit"
                   variant="contained"
                   onClick={handleSubmitForm}
                 >
                   Tạo sự kiện mới
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>

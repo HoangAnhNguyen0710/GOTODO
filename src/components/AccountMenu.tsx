@@ -43,7 +43,7 @@ export default function AccountMenu() {
           >
             <p>{user?.username}</p>
             <div className="w-9 h-9 rounded-full">
-              <img className="w-full" src={user?.image} />
+              {/* <img className="w-full" src={user?.image} /> */}
             </div>
           </div>
         </Tooltip>

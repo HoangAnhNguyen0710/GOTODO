@@ -1,4 +1,3 @@
-import React from "react";
 import { AiFillFacebook, AiFillYoutube, AiOutlineInstagram } from "react-icons/ai";
 import { ToastContainer } from "react-toast";
 const Footer = () => {

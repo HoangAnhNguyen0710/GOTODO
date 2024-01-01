@@ -98,8 +98,6 @@ export async function updateTask(docId: string | undefined, event: Event) {
     });
 }
 
-const color = ["#44f2e1", "#f0f72f", "#f7902f", "#eb4034"];
-
 export function convertEventToCalendarEvents(events: Array<Event>) {
   const convertedList: Array<CalendarEvent> = [];
 

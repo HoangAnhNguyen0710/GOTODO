@@ -2,7 +2,7 @@ import { Dialog, DialogProps } from "@mui/material";
 import * as React from "react";
 import { CalendarEvent } from "../pages/Home";
 import moment from "moment";
-import { BACKGROUND_COLOR, BORDER_COLOR} from "../const/color";
+import {BORDER_COLOR} from "../const/color";
 
 interface IEventDialogProps extends DialogProps {
   event: CalendarEvent;
@@ -22,9 +22,8 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
   onClose,
   event,
   updateTaskStatement,
-  ...others
 }) => {
-  const { start, end, body, location, category, raw, due_at } = event;
+  const { start, end, body, location, raw, due_at } = event;
   return (
     <Dialog
       open={open}

@@ -3,11 +3,9 @@ import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import {
   AiOutlineUser,
   AiOutlineLock,
-  AiOutlinePhone,
   AiOutlineMail,
   AiOutlineArrowLeft,
 } from "react-icons/ai";
-import { LuMapPin } from "react-icons/lu";
 import { User, validateUser } from "../../models";
 import { createUser } from "../../services/auth/Auth";
 import { useDispatch } from "react-redux";
@@ -17,12 +15,12 @@ import { Loading } from "../../components/common";
 
 const initialUser: Omit<User, "id"> = {
   email: "",
-  fullname: "",
-  nationality: "",
-  phone: "",
+  // fullname: "",
+  // nationality: "",
+  // phone: "",
   username: "",
-  point: 0,
-  image: "/img/default-avt.png",
+  // point: 0,
+  // image: "/img/default-avt.png",
 };
 
 const Signup = (): JSX.Element => {
@@ -99,60 +97,6 @@ const Signup = (): JSX.Element => {
                   setNewUserData({ ...newUserData, username: e.target.value })
                 }
                 minLength={4}
-              />
-            </div>
-            <div className="flex justify-center items-center relative">
-              <label
-                htmlFor="fullname"
-                className="text-2xl rounded-full absolute left-4 z-10 text-main"
-              >
-                <AiOutlineUser />
-              </label>
-              <input
-                type="text"
-                id="fullname"
-                className="focus:outline-none rounded-full w-full py-2 px-12 shadow-lg focus:shadow-xl"
-                placeholder="フルネーム"
-                onChange={(e) =>
-                  setNewUserData({ ...newUserData, fullname: e.target.value })
-                }
-              />
-            </div>
-            <div className="flex justify-center items-center relative">
-              <label
-                htmlFor="phone"
-                className="text-2xl rounded-full absolute left-4 z-10 text-main"
-              >
-                <AiOutlinePhone />
-              </label>
-              <input
-                type="text"
-                id="phone"
-                className="focus:outline-none rounded-full w-full py-2 px-12 shadow-lg focus:shadow-xl"
-                placeholder="電話番号"
-                onChange={(e) =>
-                  setNewUserData({ ...newUserData, phone: e.target.value })
-                }
-              />
-            </div>
-            <div className="flex justify-center items-center relative">
-              <label
-                htmlFor="address"
-                className="text-2xl rounded-full absolute left-4 z-10 text-main"
-              >
-                <LuMapPin />
-              </label>
-              <input
-                type="text"
-                id="address"
-                className="focus:outline-none rounded-full w-full py-2 px-12 shadow-lg focus:shadow-xl"
-                placeholder="国籍"
-                onChange={(e) =>
-                  setNewUserData({
-                    ...newUserData,
-                    nationality: e.target.value,
-                  })
-                }
               />
             </div>
             <div className="flex justify-center items-center relative">

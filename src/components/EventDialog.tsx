@@ -41,7 +41,8 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
               event.is_done == true ? (
                 <>
                   <button
-                    className="p-3 m-1 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"
+                    className="p-3 m-1 bg-red-600 border-red-600 border-4 border-solid rounded-full absolute"
+                    style={{borderColor: BORDER_COLOR[raw.priority], backgroundColor: BORDER_COLOR[raw.priority]}}
                     onClick={updateTaskStatement}
                   ></button>
                   <div className="font-bold text-2xl w-full ml-12" style={{}}>
@@ -51,7 +52,8 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
               ) : (
                 <>
                   <button
-                    className="p-3 m-1 border-red-600 border-2 border-solid rounded-full absolute"
+                    className="p-3 m-1 border-red-600 border-4 border-solid rounded-full absolute"
+                    style={{borderColor: BORDER_COLOR[raw.priority]}}
                     onClick={updateTaskStatement}
                   ></button>
                   <div className="font-bold text-2xl w-full ml-12">

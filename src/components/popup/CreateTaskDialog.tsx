@@ -336,14 +336,31 @@ export default function CreateTaskDialog({
                   onChange={(ev: any) => handleChangeTask(ev)}
                 />
               </div>
-              <div>
+              <div className="flex gap-6">
+              <button
+                className="border border-gray-700 bg-slate-500 uppercase text-sm text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-slate-800 focus:outline-none focus:shadow-outline"
+                onClick={closeDialog}>
+                Hủy
+              </button>
+              <button
+                className="border border-blue-700 bg-blue-800 text-white uppercase text-sm rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-blue-600 focus:outline-none focus:shadow-outline"
+                onClick={handleSubmitForm}>
+                Tạo nhiệm vụ mới
+              </button>
+                {/* <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={closeDialog}
+                >
+                  HỦY
+                </Button>
                 <Button
                   type="submit"
                   variant="contained"
                   onClick={handleSubmitForm}
                 >
                   Tạo nhiệm vụ mới
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>

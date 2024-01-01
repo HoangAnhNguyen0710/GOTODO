@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import SortRoundedIcon from "@mui/icons-material/SortRounded";
 import ImportExportRoundedIcon from "@mui/icons-material/ImportExportRounded";
+import { BORDER_COLOR } from "../const/color";
 
 const Todo = () => {
   const [listDay, setListDay] = useState<Array<string>>([]);
@@ -314,14 +315,16 @@ const Todo = () => {
               >
                 {pastdueTask.is_done == true ? (
                   <button
-                    className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"
+                    className="p-2 m-2 border-4 border-solid rounded-full absolute"
+                    style={{borderColor: BORDER_COLOR[pastdueTask.priority], backgroundColor: BORDER_COLOR[pastdueTask.priority]}}
                     onClick={() =>
                       updatePastdueTaskStatement(pastdueTask, index)
                     }
                   ></button>
                 ) : (
                   <button
-                    className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"
+                    className="p-2 m-2  border-4 border-solid rounded-full absolute"
+                    style={{borderColor: BORDER_COLOR[pastdueTask.priority]}}
                     onClick={() =>
                       updatePastdueTaskStatement(pastdueTask, index)
                     }
@@ -341,7 +344,7 @@ const Todo = () => {
                   </div>
                   <div className="date font-extralight text-xs text-red-500">
                     <CalendarOutlined className="mr-1" />
-                    {moment(pastdueTask.due_at).format("YYYY/MM/DD  HH:MM")}
+                    {moment(pastdueTask.due_at).format("YYYY/MM/DD  HH:mm")}
                   </div>
                 </div>
               </div>
@@ -380,12 +383,14 @@ const Todo = () => {
                 >
                   {todayTask.is_done == true ? (
                     <button
-                      className="p-2 m-2 bg-red-600 border-red-600 border-2 border-solid rounded-full absolute"
+                      className="p-2 m-2 border-4 border-solid rounded-full absolute"
+                      style={{borderColor: BORDER_COLOR[todayTask.priority], backgroundColor: BORDER_COLOR[todayTask.priority]}}
                       onClick={() => updateTodayTaskStatement(todayTask, index)}
                     ></button>
                   ) : (
                     <button
-                      className="p-2 m-2 border-red-600 border-2 border-solid rounded-full absolute"
+                      className="p-2 m-2  border-4 border-solid rounded-full absolute"
+                      style={{borderColor: BORDER_COLOR[todayTask.priority]}}
                       onClick={() => updateTodayTaskStatement(todayTask, index)}
                     ></button>
                   )}
@@ -403,7 +408,7 @@ const Todo = () => {
                     </div>
                     <div className="date font-extralight text-xs text-red-500">
                       <CalendarOutlined className="mr-1" />
-                      {moment(todayTask.due_at).format("YYYY/MM/DD  HH:MM")}
+                      {moment(todayTask.due_at).format("YYYY/MM/DD  HH:mm")}
                     </div>
                   </div>
                 </div>)

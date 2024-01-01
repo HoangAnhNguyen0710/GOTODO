@@ -41,7 +41,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
                 <>
                   <button
                     className="p-3 m-1 bg-red-600 border-red-600 border-4 border-solid rounded-full absolute"
-                    style={{borderColor: BORDER_COLOR[raw.priority], backgroundColor: BORDER_COLOR[raw.priority]}}
+                    style={{borderColor: raw && BORDER_COLOR[raw.priority], backgroundColor: raw && BORDER_COLOR[raw.priority]}}
                     onClick={updateTaskStatement}
                   ></button>
                   <div className="font-bold text-2xl w-full ml-12" style={{}}>
@@ -52,7 +52,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
                 <>
                   <button
                     className="p-3 m-1 border-red-600 border-4 border-solid rounded-full absolute"
-                    style={{borderColor: BORDER_COLOR[raw.priority]}}
+                    style={{borderColor: raw && BORDER_COLOR[raw.priority]}}
                     onClick={updateTaskStatement}
                   ></button>
                   <div className="font-bold text-2xl w-full ml-12">
@@ -65,8 +65,8 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
             )}
           </div>
           <div className="project flex mt-3">
-            <div className="project-span w-10 h-5.5 rounded-md mr-2" style={{backgroundColor: BORDER_COLOR[Number(raw.priority)]}}></div>
-            <h4 className="font-bold text-sm" style={{color: BORDER_COLOR[Number(raw.priority)]}}>
+            <div className="project-span w-10 h-5.5 rounded-md mr-2" style={{backgroundColor: raw && BORDER_COLOR[Number(raw.priority)]}}></div>
+            <h4 className="font-bold text-sm" style={{color: raw && BORDER_COLOR[Number(raw.priority)]}}>
               {items[Number(event.calendarId) - 1]}
             </h4>
           </div>
@@ -81,10 +81,10 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
               <div className="deadline-label font-bold text-slate-600 text-base">
                 Bắt đầu:
               </div>
-              <p className="font-semibold text-sm mb-2" style={{color: BORDER_COLOR[Number(raw.priority)]}}>
+              <p className="font-semibold text-sm mb-2" style={{color: raw && BORDER_COLOR[Number(raw.priority)]}}>
                 {start &&
                   start != "" &&
-                  moment(start.d.d).format("HH:mm | DD/MM/YYYY")}
+                  moment((start as any).d.d).format("HH:mm | DD/MM/YYYY")}
               </p>
             </div>
           )}
@@ -92,8 +92,8 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
             <div className="deadline-label font-bold text-slate-600 text-base">
               {event.category === "time" ? "Kết thúc:" : "Hạn:"}
             </div>
-            <p className="font-semibold text-sm" style={{color: BORDER_COLOR[Number(raw.priority)]}}>
-              {end != "" && moment(end.d.d).format("HH:mm | DD/MM/YYYY")}
+            <p className="font-semibold text-sm" style={{color: raw && BORDER_COLOR[Number(raw.priority)]}}>
+              {end != "" && moment((end as any).d.d).format("HH:mm | DD/MM/YYYY")}
               {due_at && moment(event.due_at).format("HH:mm | DD/MM/YYYY")}
             </p>
           </div>
@@ -101,7 +101,7 @@ const EventDialog: React.FunctionComponent<IEventDialogProps> = ({
             <div className="priority-label font-bold text-slate-600 text-base">
               Độ ưu tiên
             </div>
-            <p className="font-semibold text-sm" style={{color: BORDER_COLOR[Number(raw.priority)]}}>
+            <p className="font-semibold text-sm" style={{color: raw && BORDER_COLOR[Number(raw.priority)]}}>
               {raw && PRIORITIES[Number(raw.priority)]}
             </p>
           </div>

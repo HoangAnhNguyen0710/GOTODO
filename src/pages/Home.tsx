@@ -14,7 +14,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { Task } from "../models/tasks";
 import Event from "../models/events";
-import { BACKGROUND_COLOR, BORDER_COLOR } from "../const/color";
 
 export interface CalendarEvent {
   id: string;

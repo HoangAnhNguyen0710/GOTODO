@@ -5,7 +5,7 @@ import {
   EyeOutlined,
 } from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
-import { getDailyTasks, getDailyTasksAndEvents, getListDayHaveTasks, getPassDueTasks, updateTask } from "../services/Task";
+import { getListDayHaveTasks, getPassDueTasks, updateTask } from "../services/Task";
 
 import moment from "moment";
 import { Task } from "../models/tasks";
@@ -19,7 +19,6 @@ import {
   MenuItem,
   Popover,
   Select,
-  Typography,
 } from "@mui/material";
 import SortRoundedIcon from "@mui/icons-material/SortRounded";
 import ImportExportRoundedIcon from "@mui/icons-material/ImportExportRounded";
@@ -54,8 +53,8 @@ const Todo = () => {
             moment(item.data().due_at).format("YYYY/MM/DD")
           ))];
 
+        uniqueDates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
         console.log(uniqueDates);
-
         let dataList = data.docs.map((item) => ({
           ...item.data(),
         }));
@@ -79,24 +78,6 @@ const Todo = () => {
       });
     }
     getListDay();
-    // async function getTodayTasks() {
-    //   const today = new Date();
-    //   await (
-    //     await getDailyTasks(today, taskFilter, sortType)
-    //   ).onSnapshot((data) => {
-    //     let dataList = data.docs.map((item) => ({
-    //       ...item.data(),
-    //     }))
-    //     if(sortBy === "priority"){
-    //       if(sortType === "asc"){
-    //         dataList = dataList.sort((a, b) => Number(a.priority) - Number(b.priority))
-    //       }
-    //       else dataList = dataList.sort((a, b) => Number(b.priority) - Number(a.priority))
-    //     }
-    //     setTodayTasks(dataList as Array<Task>);
-    //   });
-    // }
-    // getTodayTasks();
     async function getPassdueTasks() {
       const today = new Date();
       await (
@@ -185,27 +166,18 @@ const Todo = () => {
     }
   };
 
-  const updateTodayTaskStatement = async (task: Task, index: number) => {
+  const updateTodayTaskStatement = async (task: Task) => {
     if (task.is_done) {
       task.is_done = false;
     } else task.is_done = true;
-    const statement: boolean | void = await updateTask(task.id, task);
-    if (statement) {
-      todayTasks[index].is_done = task.is_done;
-      setTodayTasks([...todayTasks]);
-    }
+    await updateTask(task.id, task);
   };
-  const updatePastdueTaskStatement = async (task: Task, index: number) => {
+  const updatePastdueTaskStatement = async (task: Task) => {
     if (task.is_done) {
       task.is_done = false;
     } else task.is_done = true;
-    const statement: boolean | void = await updateTask(task.id, task);
-    if (statement) {
-      pastdueTasks[index].is_done = task.is_done;
-      setPastdueTasks([...pastdueTasks]);
-    }
+    await updateTask(task.id, task);
   };
-  console.log(listDay);
   
   return (
     <React.Fragment>
@@ -308,7 +280,7 @@ const Todo = () => {
             <h3 className="p-2 font-bold text-lg text-red-500">Quá hạn</h3>
           </div>
           {pastdueDropDown ? (
-            pastdueTasks.map((pastdueTask: Task, index: number) => (
+            pastdueTasks.map((pastdueTask: Task) => (
               <div
                 className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
                 key={pastdueTask.id}
@@ -318,7 +290,7 @@ const Todo = () => {
                     className="p-2 m-2 border-4 border-solid rounded-full absolute"
                     style={{borderColor: BORDER_COLOR[pastdueTask.priority], backgroundColor: BORDER_COLOR[pastdueTask.priority]}}
                     onClick={() =>
-                      updatePastdueTaskStatement(pastdueTask, index)
+                      updatePastdueTaskStatement(pastdueTask)
                     }
                   ></button>
                 ) : (
@@ -326,7 +298,7 @@ const Todo = () => {
                     className="p-2 m-2  border-4 border-solid rounded-full absolute"
                     style={{borderColor: BORDER_COLOR[pastdueTask.priority]}}
                     onClick={() =>
-                      updatePastdueTaskStatement(pastdueTask, index)
+                      updatePastdueTaskStatement(pastdueTask)
                     }
                   ></button>
                 )}
@@ -375,7 +347,7 @@ const Todo = () => {
                 </h3>
               </div>
               {todayDropDown ? (
-              todayTasks.map((todayTask: Task, index: number) => (
+              todayTasks.map((todayTask: Task) => (
                 moment(todayTask.due_at).format("YYYY/MM/DD") === date  && (
                 <div
                   className="passdue-task border-solid border-t-2 border-zinc-200 p-1 mx-7 flex"
@@ -385,13 +357,13 @@ const Todo = () => {
                     <button
                       className="p-2 m-2 border-4 border-solid rounded-full absolute"
                       style={{borderColor: BORDER_COLOR[todayTask.priority], backgroundColor: BORDER_COLOR[todayTask.priority]}}
-                      onClick={() => updateTodayTaskStatement(todayTask, index)}
+                      onClick={() => updateTodayTaskStatement(todayTask)}
                     ></button>
                   ) : (
                     <button
                       className="p-2 m-2  border-4 border-solid rounded-full absolute"
                       style={{borderColor: BORDER_COLOR[todayTask.priority]}}
-                      onClick={() => updateTodayTaskStatement(todayTask, index)}
+                      onClick={() => updateTodayTaskStatement(todayTask)}
                     ></button>
                   )}
                   <div

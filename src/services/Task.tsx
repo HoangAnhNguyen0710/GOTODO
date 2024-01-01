@@ -77,12 +77,13 @@ export async function getListDayHaveTasks(
   }
   const start = new Date(Day)
   // start.setHours(0, 0, 0)
-
+  const f = false
 
   return await firestore
     .collection("Tasks")
     .where("due_at", ">=", start.toISOString())
     .where("project_id", "in", Filter)
+    .where("is_done", "==", f)
     .orderBy("due_at", sortType as never)
 }
 

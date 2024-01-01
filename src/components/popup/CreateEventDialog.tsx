@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Button,
   Dialog,
   DialogContent,
   FormGroup,
@@ -26,6 +25,7 @@ export interface CreateEventFormProps {
   handleClose: () => void;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const DEFAULT_REMINDER = 5; // Default behaviour is notify before event start DEFAULT_REMINDER secs
 
 const initialEventData: Event = {

@@ -308,7 +308,7 @@ export default function CreateTaskDialog({
                     htmlFor="first-name"
                     className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
                   >
-                    Thời gian kết thúc
+                    Thời gian tới hạn
                   </label>
                   <TimePicker
                     value={endTime}

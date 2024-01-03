@@ -116,9 +116,10 @@ export async function getDailyTasksNum(Day: Date) {
 
   const end = new Date(Day);
   end.setHours(23, 59, 59);
-
+  const f = false
   return await firestore
     .collection("Tasks")
+    .where("is_done", "==", f)
     .where("due_at", "<=", end.toISOString())
     .where("due_at", ">=", start.toISOString());
 }
